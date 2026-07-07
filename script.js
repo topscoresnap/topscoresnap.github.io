@@ -1,70 +1,118 @@
 let data = [];
 
+
 fetch("data.json")
+
 .then(response => response.json())
+
 .then(json => {
-    data = json;
-    showTable(data);
-    showTopThree(data);
+
+data = json;
+
+showTable(data);
+
+showTop(data);
+
 });
+
 
 
 function showTable(list){
 
-    let html = "";
 
-    list.forEach(user => {
-
-        html += `
-        <tr>
-            <td>${user.rank}</td>
-            <td>@${user.username}</td>
-            <td>${user.score}</td>
-        </tr>
-        `;
-
-    });
-
-    document.getElementById("table").innerHTML = html;
-
-}
+let html = "";
 
 
-
-function showTopThree(list){
-
-    let html = "";
-
-    list.slice(0,3).forEach((user,index)=>{
-
-        html += `
-        <div class="card">
-            ${["🥇","🥈","🥉"][index]}
-            <br><br>
-            @${user.username}
-            <br>
-            ${user.score}
-        </div>
-        `;
-
-    });
+list.forEach(user => {
 
 
-    document.getElementById("top").innerHTML = html;
+html += `
 
-}
+<tr>
 
+<td>${user.rank}</td>
 
+<td>${user.username}</td>
 
-document.getElementById("search").addEventListener("input", function(){
+<td>${user.score}</td>
 
-    let search = this.value.toLowerCase();
+</tr>
 
-    let result = data.filter(user =>
-        user.username.toLowerCase().includes(search)
-    );
+`;
 
-
-    showTable(result);
 
 });
+
+
+document.getElementById("table").innerHTML = html;
+
+
+}
+
+
+
+
+function showTop(list){
+
+
+let html = "";
+
+
+list.slice(0,3).forEach((user)=>{
+
+
+html += `
+
+<div class="card">
+
+<h2>#${user.rank}</h2>
+
+<p>${user.username}</p>
+
+<strong>${user.score}</strong>
+
+</div>
+
+`;
+
+
+});
+
+
+document.getElementById("top").innerHTML = html;
+
+
+}
+
+
+
+
+let searchBox = document.getElementById("search");
+
+
+if(searchBox){
+
+
+searchBox.addEventListener("input",function(){
+
+
+let value = this.value.toLowerCase();
+
+
+
+let result = data.filter(user =>
+
+user.username.toLowerCase().includes(value)
+
+);
+
+
+
+showTable(result);
+
+
+
+});
+
+
+}
