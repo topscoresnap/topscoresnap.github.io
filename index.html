@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TopPoints | أعلى حسابات نقاط سناب شات</title>
+    <title>توب سكور سناب | أعلى حسابات نقاط سناب شات</title>
     
     <link rel="icon" type="image/png" href="logo.png">
-    <meta property="og:title" content="TopPoints | Snapchat Leaderboard">
+    <meta property="og:title" content="توب سكور سناب | TopScoreSnap">
     <meta property="og:description" content="اكتشف أعلى حسابات نقاط سناب شات في العالم">
     <meta property="og:image" content="logo.png">
     <meta property="og:type" content="website">
@@ -17,8 +17,9 @@
 
     <header>
         <div class="logo-area">
-            <img src="logo.png" class="logo-img" alt="TopPoints">
-            <div class="logo-text">Top<span>Points</span></div>
+            <img src="logo.png" class="header-logo-img" onerror="this.style.display='none'; document.getElementById('headerFallbackIcon').style.display='block';" alt="TopScoreSnap">
+            <div id="headerFallbackIcon" class="logo-fallback-icon" style="display:none;">💎</div>
+            <div class="logo-text">توب<span> سكور سناب</span></div>
         </div>
         <nav class="nav-links" id="navLinks">
             </nav>
@@ -28,31 +29,32 @@
                 <button onclick="switchLanguage('en')" id="btnEn" class="lang-btn">EN</button>
             </div>
             <input type="text" id="searchNav" oninput="handleSearch(this.value)" class="search-nav" placeholder="ابحث عن لاعب...">
-            <a href="#" id="loginBtn" class="login-btn">تسجيل الدخول</a>
         </div>
     </header>
 
     <section class="hero-section">
         <div class="hero-text">
             <h1 id="heroTitle">أعلى الحسابات <br>من حيث <span>النقاط</span></h1>
-            <p id="heroSubtitle">اكتشف أقوى اللاعبين وتصدر الترتيب العالمي واجمع النقاط لتصل إلى القمة دائماً!</p>
+            <p id="heroSubtitle">جاري تحميل البيانات...</p>
             <div class="hero-btns">
-                <button class="btn-blue" id="btnView">عرض المتصدرين 🏆</button>
-                <button class="btn-outline" id="btnHow">كيف تعمل النقاط؟ ❓</button>
+                <button class="btn-blue" id="btnView" onclick="scrollToLeaderboard()">عرض المتصدرين 🏆</button>
             </div>
         </div>
         <div class="hero-image-container">
-            <img src="logo.png" class="crystal-logo-big" alt="Snapchat Crystal">
+            <div class="crystal-glow-wrapper">
+                <img src="logo.png" class="crystal-logo-big" onerror="this.style.display='none'; document.getElementById('fallbackCrystal').style.display='flex';" alt="Snapchat Crystal">
+                <div id="fallbackCrystal" class="fallback-crystal-neon" style="display:none;">💎</div>
+            </div>
         </div>
     </section>
 
-    <div class="dashboard-grid">
+    <div class="dashboard-grid" id="mainLeaderboardSection">
         
         <section class="dashboard-card">
             <div class="card-header-area">
                 <div class="card-title-group">
                     <div class="card-title" id="cardTitle">لوحة المتصدرين</div>
-                    <span class="card-sub" id="cardSub">أعلى 10 حسابات من حيث النقاط</span>
+                    <span class="card-sub" id="cardSub">أعلى حسابات من حيث النقاط</span>
                 </div>
                 <div class="time-filters">
                     <button class="filter-btn active" id="filterAll">كل الوقت</button>
@@ -67,9 +69,11 @@
                 <div id="thScore">النقاط</div>
             </div>
 
-            <div class="rows-list" id="rowsContainer"></div>
+            <div class="rows-list" id="rowsContainer">
+                <div style="text-align: center; color: var(--text-muted); padding: 20px;">جاري تحميل الحسابات بشكل آمن...⏳</div>
+            </div>
 
-            <a href="#" class="view-all-btn" id="btnAll">عرض القائمة كاملة ☰</a>
+            <a href="#" class="view-all-btn" id="btnAll" onclick="return false;">عرض القائمة كاملة ☰</a>
         </section>
 
         <div class="left-column">
@@ -80,15 +84,15 @@
 
             <div class="dashboard-card about-box">
                 <h3 id="aboutBoxTitle">تعريف المنصة ✨</h3>
-                <p id="aboutBoxDesc">تحميل الوصف والتعريف...</p>
+                <p id="aboutBoxDesc">تحميل الوصف والتعريف الرسمي...</p>
             </div>
 
             <div class="user-preview-card">
-                <div class="user-preview-avatar">✨</div>
+                <div class="user-preview-avatar">👑</div>
                 <div class="preview-name-badge" id="previewPlayerName">---</div>
                 <span style="color:var(--text-muted); font-size:11px;" id="previewTitleText">المركز الأول</span>
                 
-                <div class="preview-score-big" id="previewPlayerScore">000,000</div>
+                <div class="preview-score-big" id="previewPlayerScore">0</div>
                 <span style="color:var(--text-muted); font-size:11px;" id="thScoreLabel">إجمالي النقاط</span>
 
                 <div class="stats-mini-grid">
@@ -96,7 +100,7 @@
                     <div class="stat-box"><div id="statWinLabel">نسبة الفوز</div><span>98%</span></div>
                     <div class="stat-box"><div id="statLevelLabel">المستوى</div><span>12</span></div>
                 </div>
-                <a href="#" class="profile-action-btn" id="btnProfile">عرض الملف الشخصي 👤</a>
+                <a href="#" class="profile-action-btn" id="btnProfile" onclick="return false;">الملف الشخصي موثق ✓</a>
             </div>
 
         </div>
