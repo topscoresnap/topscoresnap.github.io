@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Snap Score Profile</title>
+
+<meta name="description" content="Snapchat score profile ranking.">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+
+<div class="brand">
+Top Snap Scores
+</div>
+
+
+<nav>
+
+<a href="index.html">Home</a>
+
+<a href="about.html">About</a>
+
+
+<span class="language">
+<a href="index.html">EN</a>
+|
+<a href="ar.html">AR</a>
+</span>
+
+
+</nav>
+
+
+</header>
+
+
+
+<section class="hero">
+
+<h1 id="username">
+Player Profile
+</h1>
+
+
+<p id="score">
+
+</p>
+
+
+</section>
+
+
+
+<section class="leaderboard">
+
+
+<div class="card">
+
+
+<h2>
+Ranking Information
+</h2>
+
+
+<p id="rank"></p>
+
+<p id="updated"></p>
+
+
+</div>
+
+
+</section>
+
+
+
+<footer>
+
+Top Snap Scores
+
+</footer>
+
+
+
+<script>
+
+
+const params = new URLSearchParams(window.location.search);
+
+const user = params.get("user");
+
+
+
+fetch("data.json")
+
+.then(res => res.json())
+
+.then(data => {
+
+
+const player = data.find(
+item => item.username === user
+);
+
+
+
+if(player){
+
+
+document.getElementById("username").innerHTML =
+player.username;
+
+
+document.getElementById("score").innerHTML =
+"Snap Score: " + player.score;
+
+
+document.getElementById("rank").innerHTML =
+"Global Rank: #" + player.rank;
+
+
+document.getElementById("updated").innerHTML =
+"Updated: " + player.updated;
+
+
+}
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
