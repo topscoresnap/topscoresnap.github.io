@@ -1,238 +1,372 @@
-<!DOCTYPE html>
-<html lang="en">
+*{
+box-sizing:border-box;
+}
 
-<head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+body{
 
-<title>
-Top Snap Scores | Highest Snapchat Score Ranking
-</title>
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#050507;
+color:#ffffff;
 
-<meta name="description" content="Top Snap Scores leaderboard ranking the highest Snapchat scores worldwide.">
+}
 
-<link rel="stylesheet" href="style.css">
 
-<link rel="icon" href="logo.png">
 
-</head>
+.header{
 
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 8%;
 
-<body>
+background:#0b0b10;
+border-bottom:1px solid #20202a;
 
+}
 
-<header class="header">
 
 
-<div class="brand">
+.brand{
 
-<img src="logo.png">
+font-size:28px;
+font-weight:800;
+letter-spacing:1px;
 
-<span>
-Top Snap Scores
-</span>
+}
 
-</div>
 
 
-<nav>
+nav a{
 
-<a href="index.html">
-Home
-</a>
+color:#a1a1aa;
+text-decoration:none;
+margin-left:25px;
+font-size:16px;
 
-<a href="about.html">
-About
-</a>
+transition:.3s;
 
+}
 
-<div class="lang">
 
-<a href="index.html">
-EN
-</a>
 
-<a href="ar.html">
-AR
-</a>
+nav a:hover{
 
-</div>
+color:#ffffff;
 
+}
 
-</nav>
 
 
-</header>
+.language{
 
+margin-left:25px;
 
+color:#52525b;
 
+}
 
 
-<section class="hero">
 
+.hero{
 
-<div class="hero-text">
+text-align:center;
 
+padding:80px 20px;
 
-<h1>
-World's Top Snapchat Scores
-</h1>
+background:
+radial-gradient(circle at top,#312e81,#050507 65%);
 
+}
 
-<p>
-Discover the highest Snapchat scores and ranked accounts worldwide.
-</p>
 
 
-</div>
+.hero h1{
 
+font-size:52px;
+margin:0 0 15px;
 
+}
 
-<div class="stats">
 
 
-<div class="stat-card">
+.hero p{
 
-<h2>
-26
-</h2>
+font-size:20px;
+color:#a1a1aa;
 
-<p>
-Accounts
-</p>
+}
 
-</div>
 
 
-<div class="stat-card">
+.stats{
 
-<h2>
-1.1B+
-</h2>
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
 
-<p>
-Highest Score
-</p>
+margin-top:50px;
 
-</div>
+}
 
 
 
-<div class="stat-card">
+.stats div{
 
-<h2>
-#1
-</h2>
+background:#111118;
 
-<p>
-Global Rank
-</p>
+border:1px solid #27272f;
 
-</div>
+border-radius:20px;
 
+padding:30px 45px;
 
-</div>
+min-width:190px;
 
+}
 
-</section>
 
 
+.stats h2{
 
+margin:0;
 
+font-size:36px;
 
-<section class="top-section">
+}
 
 
-<h2>
-Top Ranked Accounts
-</h2>
 
+.stats p{
 
-<div id="top"></div>
+font-size:15px;
 
+color:#a1a1aa;
 
-</section>
+}
 
 
 
+.search{
 
+text-align:center;
 
+padding:45px 20px;
 
-<section class="leaderboard">
+}
 
 
-<div class="search-box">
 
-<input id="search" placeholder="Search username...">
+input{
 
-</div>
+width:90%;
+max-width:600px;
 
+padding:18px 25px;
 
+background:#111118;
 
-<table>
+border:1px solid #27272f;
 
+border-radius:30px;
 
-<thead>
+color:white;
 
-<tr>
+font-size:17px;
 
-<th>
-Rank
-</th>
+outline:none;
 
-<th>
-Username
-</th>
+}
 
-<th>
-Snap Score
-</th>
 
 
-</tr>
+.leaderboard{
 
+width:90%;
+max-width:1100px;
 
-</thead>
+margin:auto;
 
+}
 
 
-<tbody id="table">
 
+table{
 
-</tbody>
+width:100%;
 
+border-collapse:collapse;
 
-</table>
+background:#0d0d12;
 
+border-radius:20px;
 
-</section>
+overflow:hidden;
 
+}
 
 
 
+th{
 
-<footer>
+background:#18181f;
 
+padding:20px;
 
-<h3>
-Top Snap Scores
-</h3>
+font-size:17px;
 
+}
 
-<p>
-The ultimate Snapchat score ranking platform.
-</p>
 
 
-</footer>
+td{
 
+padding:18px;
 
+text-align:center;
 
+border-bottom:1px solid #20202a;
 
-<script src="script.js"></script>
+color:#d4d4d8;
 
+}
 
-</body>
 
-</html>
+
+tr:hover{
+
+background:#15151d;
+
+}
+
+
+
+.leaderboard a,
+.card a{
+
+color:#ffffff;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+
+
+.leaderboard a:hover,
+.card a:hover{
+
+color:#a78bfa;
+
+}
+
+
+
+#top{
+
+display:flex;
+
+justify-content:center;
+
+gap:25px;
+
+flex-wrap:wrap;
+
+margin:40px 20px;
+
+}
+
+
+
+.card{
+
+background:#111118;
+
+border:1px solid #27272f;
+
+border-radius:22px;
+
+padding:30px;
+
+min-width:230px;
+
+transition:.3s;
+
+}
+
+
+
+.card:hover{
+
+transform:translateY(-8px);
+
+border-color:#7c3aed;
+
+}
+
+
+
+.card strong{
+
+font-size:24px;
+
+}
+
+
+
+footer{
+
+text-align:center;
+
+padding:50px;
+
+color:#71717a;
+
+}
+
+
+
+@media(max-width:700px){
+
+
+.header{
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+
+.hero h1{
+
+font-size:34px;
+
+}
+
+
+.stats div{
+
+width:90%;
+
+}
+
+
+table{
+
+font-size:14px;
+
+}
+
+
+td,th{
+
+padding:12px;
+
+}
+
+
+}
