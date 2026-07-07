@@ -1,110 +1,160 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>توب سكور سناب | أعلى حسابات نقاط سناب شات</title>
-    
-    <link rel="icon" type="image/png" href="logo.png">
-    <meta property="og:title" content="توب سكور سناب | TopScoreSnap">
-    <meta property="og:description" content="اكتشف أعلى حسابات نقاط سناب شات في العالم">
-    <meta property="og:image" content="logo.png">
-    <meta property="og:type" content="website">
-
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopScoreSnap — أعلى نقاط سناب شات</title>
+<meta name="description" content="TopScoreSnap: لوحة عامة مستقلة لأعلى نقاط Snap Score حول العالم، بدون تسجيل دخول.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">
-            <img src="logo.png" class="header-logo-img" onerror="this.style.display='none'; document.getElementById('headerFallbackIcon').style.display='block';" alt="TopScoreSnap">
-            <div id="headerFallbackIcon" class="logo-fallback-icon" style="display:none;">💎</div>
-            <div class="logo-text">توب<span> سكور سناب</span></div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#top" class="brand">
+      <img src="logo.png" alt="TopScoreSnap" class="brand-mark">
+      <span class="brand-name">TopScoreSnap</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <a href="#top" data-i18n="nav.home">الرئيسية</a>
+      <a href="#leaderboard" data-i18n="nav.leaderboard">المتصدرين</a>
+      <a href="#about" data-i18n="nav.about">عن الموقع</a>
+    </nav>
+
+    <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">
+      <span class="lang-toggle-dot" aria-hidden="true"></span>
+      <span id="langToggleLabel">EN</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">لوحة عامة · بدون تسجيل دخول</p>
+        <h1 class="hero-title">
+          <span data-i18n="hero.title1">أعلى الحسابات</span>
+          <span class="hero-title-accent" data-i18n="hero.title2">من حيث نقاط سناب</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">تصفح ترتيب أعلى حسابات Snap Score حول العالم لحظة بلحظة، افتح الموقع وشوف مكانك بين الكبار — بدون حساب، بدون تسجيل، بدون تعقيد.</p>
+        <div class="hero-ctas">
+          <a href="#leaderboard" class="btn btn-primary facet">
+            <span data-i18n="hero.ctaPrimary">شوف المتصدرين</span>
+          </a>
+          <a href="#about" class="btn btn-ghost facet">
+            <span data-i18n="hero.ctaSecondary">عن الموقع</span>
+          </a>
         </div>
-        <nav class="nav-links" id="navLinks">
-            </nav>
-        <div class="header-actions">
-            <div class="lang-switcher">
-                <button onclick="switchLanguage('ar')" id="btnAr" class="lang-btn active">AR</button>
-                <button onclick="switchLanguage('en')" id="btnEn" class="lang-btn">EN</button>
-            </div>
-            <input type="text" id="searchNav" oninput="handleSearch(this.value)" class="search-nav" placeholder="ابحث عن لاعب...">
-        </div>
-    </header>
+      </div>
 
-    <section class="hero-section">
-        <div class="hero-text">
-            <h1 id="heroTitle">أعلى الحسابات <br>من حيث <span>النقاط</span></h1>
-            <p id="heroSubtitle">اكتشف أقوى اللاعبين وتصدر الترتيب العالمي واجمع النقاط لتصل إلى القمة دائماً!</p>
-            <div class="hero-btns">
-                <button class="btn-blue" id="btnView" onclick="scrollToLeaderboard()">عرض المتصدرين 🏆</button>
-            </div>
-        </div>
-        <div class="hero-image-container">
-            <div class="crystal-glow-wrapper">
-                <img src="logo.png" class="crystal-logo-big" onerror="this.style.display='none'; document.getElementById('fallbackCrystal').style.display='flex';" alt="Snapchat Crystal">
-                <div id="fallbackCrystal" class="fallback-crystal-neon" style="display:none;">💎</div>
-            </div>
-        </div>
-    </section>
-
-    <div class="dashboard-grid" id="mainLeaderboardSection">
-        
-        <section class="dashboard-card">
-            <div class="card-header-area">
-                <div class="card-title-group">
-                    <div class="card-title" id="cardTitle">لوحة المتصدرين</div>
-                    <span class="card-sub" id="cardSub">أعلى حسابات من حيث النقاط</span>
-                </div>
-                <div class="time-filters">
-                    <button class="filter-btn active" id="filterAll">كل الوقت</button>
-                    <button class="filter-btn" id="filterMonth">هذا الشهر</button>
-                    <button class="filter-btn" id="filterWeek">هذا الأسبوع</button>
-                </div>
-            </div>
-
-            <div class="table-th">
-                <div id="thRank">الترتيب</div>
-                <div id="thPlayer">اللاعب</div>
-                <div id="thScore">النقاط</div>
-            </div>
-
-            <div class="rows-list" id="rowsContainer"></div>
-
-            <a href="#" class="view-all-btn" id="btnAll" onclick="return false;">عرض القائمة كاملة ☰</a>
-        </section>
-
-        <div class="left-column">
-            
-            <div class="mini-podium-card">
-                <div class="mini-podium" id="podiumContainer"></div>
-            </div>
-
-            <div class="dashboard-card about-box">
-                <h3 id="aboutBoxTitle">تعريف المنصة ✨</h3>
-                <p id="aboutBoxDesc">منصة توب سكور سناب هي اللوحة العالمية الأولى المتخصصة في رصد وتوثيق أعلى مستخدمي سناب شات من حيث النقاط (Snap Scores).</p>
-            </div>
-
-            <div class="user-preview-card">
-                <div class="user-preview-avatar">👑</div>
-                <div class="preview-name-badge" id="previewPlayerName">---</div>
-                <span style="color:var(--text-muted); font-size:11px;" id="previewTitleText">المركز الأول</span>
-                
-                <div class="preview-score-big" id="previewPlayerScore">0</div>
-                <span style="color:var(--text-muted); font-size:11px;" id="thScoreLabel">إجمالي النقاط</span>
-
-                <div class="stats-mini-grid">
-                    <div class="stat-box"><div id="statBadgesLabel">الشارات</div><span>342</span></div>
-                    <div class="stat-box"><div id="statWinLabel">نسبة الفوز</div><span>98%</span></div>
-                    <div class="stat-box"><div id="statLevelLabel">المستوى</div><span>12</span></div>
-                </div>
-                <div class="profile-action-btn" id="btnProfile">الملف الشخصي موثق ✓</div>
-            </div>
-
-        </div>
-
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-art-glow"></div>
+        <img src="logo.png" alt="" class="hero-ghost">
+      </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <div class="wrap stats-strip">
+      <div class="stat facet">
+        <span class="stat-value" id="statRanked">—</span>
+        <span class="stat-label" data-i18n="stats.ranked">حساب مُصنّف</span>
+      </div>
+      <div class="stat facet">
+        <span class="stat-value" id="statHighest">—</span>
+        <span class="stat-label" data-i18n="stats.highest">أعلى نقاط</span>
+      </div>
+      <div class="stat facet">
+        <span class="stat-value" id="statUpdated">—</span>
+        <span class="stat-label" data-i18n="stats.updated">آخر تحديث</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="leaderboard" id="leaderboard">
+    <div class="wrap">
+
+      <h2 class="podium-title" data-i18n="podium.title">أعلى 3 حسابات</h2>
+
+      <div class="podium" id="podium">
+        <!-- injected by script.js -->
+      </div>
+
+      <div class="board-panel facet">
+
+        <div class="board-controls">
+          <div class="tabs" id="periodTabs" role="tablist">
+            <button class="tab active" data-period="all" role="tab" aria-selected="true" data-i18n="tabs.all">الكل</button>
+            <button class="tab" data-period="weekly" role="tab" aria-selected="false" data-i18n="tabs.weekly">أسبوعي</button>
+            <button class="tab" data-period="monthly" role="tab" aria-selected="false" data-i18n="tabs.monthly">شهري</button>
+          </div>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.65 13.39l5.23 5.23a1 1 0 0 0 1.42-1.42l-5.23-5.23A7.5 7.5 0 0 0 10.5 3Zm-5.5 7.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z"/></svg>
+            <input type="search" id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="ابحث عن يوزر...">
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="board-table">
+            <thead>
+              <tr>
+                <th class="col-rank" data-i18n="table.rank">الترتيب</th>
+                <th class="col-user" data-i18n="table.username">اليوزر</th>
+                <th class="col-score" data-i18n="table.score">النقاط</th>
+              </tr>
+            </thead>
+            <tbody id="boardBody">
+              <!-- injected by script.js -->
+            </tbody>
+          </table>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <img src="logo.png" alt="" class="empty-ghost">
+            <p class="empty-title" data-i18n="empty.title">لا توجد بيانات لهذه الفترة بعد</p>
+            <p class="empty-subtitle" data-i18n="empty.subtitle">راجعنا بعدين — نحدّث الأرقام أول بأول.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="wrap about-inner">
+      <p class="eyebrow" data-i18n="about.eyebrow">عن الموقع</p>
+      <h2 class="about-title" data-i18n="about.title">شنو هو TopScoreSnap؟</h2>
+      <p class="about-p" data-i18n="about.p1">TopScoreSnap لوحة عرض مستقلة تجمع أعلى نقاط Snap Score المعروفة حول العالم في مكان واحد. الفكرة بسيطة: تفتح الموقع، تشوف الترتيب، وخلاص — بدون حساب، بدون تسجيل دخول، وبدون أي بيانات شخصية منك.</p>
+      <p class="about-p" data-i18n="about.p2">نحدّث الأرقام يدويًا بشكل دوري بناءً على ما يتوفر من مصادر عامة، وأي حد يقدر يتصفح القائمة أو يبحث عن يوزر معيّن في أي وقت مجانًا.</p>
+
+      <div class="disclaimer facet">
+        <p class="disclaimer-title" data-i18n="about.disclaimerTitle">تنويه مهم</p>
+        <p class="disclaimer-text" data-i18n="about.disclaimer">هذا الموقع مستقل وغير رسمي، وما له أي ارتباط أو علاقة برعاية أو تأييد من شركة Snap Inc. أو تطبيق Snapchat. اسم "Snapchat" وشعاراته ملك لأصحابها، ونستخدمها هنا فقط للإشارة إلى الخدمة التي تُقاس نقاطها.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="logo.png" alt="" class="brand-mark small">
+      <span class="brand-name">TopScoreSnap</span>
+    </div>
+    <p class="footer-tagline" data-i18n="footer.tagline">تتبع أعلى نقاط سناب شات، ببساطة.</p>
+    <p class="footer-rights">© <span id="year"></span> TopScoreSnap · <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
