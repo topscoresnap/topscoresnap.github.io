@@ -1,160 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ar" dir="rtl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopPoints | أعلى حسابات نقاط سناب شات</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta property="og:title" content="TopPoints | Snapchat Leaderboard">
+    <meta property="og:description" content="اكتشف أعلى حسابات نقاط سناب شات في العالم">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:type" content="website">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Top Snap Scores | Highest Snapchat Scores Leaderboard</title>
-
-<meta name="description" content="Top Snap Scores is a global Snapchat score leaderboard ranking the highest Snap Scores.">
-
-<meta name="keywords" content="Top Snap Scores, Highest Snapchat Score, Snapchat Leaderboard, Snap Score Ranking">
-
-<meta property="og:title" content="Top Snap Scores">
-<meta property="og:description" content="Global Snapchat Score Leaderboard">
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
 
-
-<header class="header">
-
-
-<div class="brand">
-Top Snap Scores
-</div>
-
-
-<nav>
-
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-
-<span class="language">
-
-<a href="index.html">EN</a>
-|
-<a href="ar.html">AR</a>
-
-</span>
-
-</nav>
-
-
-</header>
-
-
-
-<section class="hero">
-
-
-<h1>
-Highest Snapchat Scores
-</h1>
-
-
-<p>
-Global Snapchat Score Leaderboard
-</p>
-
-
-<div class="stats">
-
-
-<div>
-<h2>26</h2>
-<p>Ranked Accounts</p>
-</div>
-
-
-<div>
-<h2>1.1B+</h2>
-<p>Highest Score</p>
-</div>
-
-
-<div>
-<h2>2026</h2>
-<p>Last Update</p>
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-<section class="search">
-
-<input id="search" placeholder="Search username...">
-
-</section>
-
-
-
-<section id="top"></section>
-
-
-
-<section class="leaderboard">
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>Rank</th>
-
-<th>Username</th>
-
-<th>Snap Score</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="table">
-
-</tbody>
-
-
-</table>
-
-
-</section>
-
-
-
-<footer>
-
-<p>
-Top Snap Scores
-</p>
-
-<p>
-Not affiliated with Snapchat.
-</p>
-
-
-</footer>
-
-
-
-<script src="script.js"></script>
-
-
+    <header>
+        <div class="logo-area">
+            <img src="logo.png" class="logo-img" alt="TopPoints">
+            <div class="logo-text">Top<span>Points</span></div>
+        </div>
+        <nav class="nav-links" id="navLinks">
+            </nav>
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button onclick="switchLanguage('ar')" id="btnAr" class="lang-btn active">AR</button>
+                <button onclick="switchLanguage('en')" id="btnEn" class="lang-btn">EN</button>
+            </div>
+            <input type="text" id="searchNav" oninput="handleSearch(this.value)" class="search-nav" placeholder="ابحث عن لاعب...">
+            <a href="#" id="loginBtn" class="login-btn">تسجيل الدخول</a>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-text">
+            <h1 id="heroTitle">أعلى الحسابات <br>من حيث <span>النقاط</span></h1>
+            <p id="heroSubtitle">اكتشف أقوى اللاعبين وتصدر الترتيب العالمي واجمع النقاط لتصل إلى القمة دائماً!</p>
+            <div class="hero-btns">
+                <button class="btn-blue" id="btnView">عرض المتصدرين 🏆</button>
+                <button class="btn-outline" id="btnHow">كيف تعمل النقاط؟ ❓</button>
+            </div>
+        </div>
+        <div class="hero-image-container">
+            <img src="logo.png" class="crystal-logo-big" alt="Snapchat Crystal">
+        </div>
+    </section>
+
+    <div class="dashboard-grid">
+        
+        <section class="dashboard-card">
+            <div class="card-header-area">
+                <div class="card-title-group">
+                    <div class="card-title" id="cardTitle">لوحة المتصدرين</div>
+                    <span class="card-sub" id="cardSub">أعلى 10 حسابات من حيث النقاط</span>
+                </div>
+                <div class="time-filters">
+                    <button class="filter-btn active" id="filterAll">كل الوقت</button>
+                    <button class="filter-btn" id="filterMonth">هذا الشهر</button>
+                    <button class="filter-btn" id="filterWeek">هذا الأسبوع</button>
+                </div>
+            </div>
+
+            <div class="table-th">
+                <div id="thRank">الترتيب</div>
+                <div id="thPlayer">اللاعب</div>
+                <div id="thScore">النقاط</div>
+            </div>
+
+            <div class="rows-list" id="rowsContainer"></div>
+
+            <a href="#" class="view-all-btn" id="btnAll">عرض القائمة كاملة ☰</a>
+        </section>
+
+        <div class="left-column">
+            
+            <div class="mini-podium-card">
+                <div class="mini-podium" id="podiumContainer"></div>
+            </div>
+
+            <div class="dashboard-card about-box">
+                <h3 id="aboutBoxTitle">تعريف المنصة ✨</h3>
+                <p id="aboutBoxDesc">تحميل الوصف والتعريف...</p>
+            </div>
+
+            <div class="user-preview-card">
+                <div class="user-preview-avatar">✨</div>
+                <div class="preview-name-badge" id="previewPlayerName">---</div>
+                <span style="color:var(--text-muted); font-size:11px;" id="previewTitleText">المركز الأول</span>
+                
+                <div class="preview-score-big" id="previewPlayerScore">000,000</div>
+                <span style="color:var(--text-muted); font-size:11px;" id="thScoreLabel">إجمالي النقاط</span>
+
+                <div class="stats-mini-grid">
+                    <div class="stat-box"><div id="statBadgesLabel">الشارات</div><span>342</span></div>
+                    <div class="stat-box"><div id="statWinLabel">نسبة الفوز</div><span>98%</span></div>
+                    <div class="stat-box"><div id="statLevelLabel">المستوى</div><span>12</span></div>
+                </div>
+                <a href="#" class="profile-action-btn" id="btnProfile">عرض الملف الشخصي 👤</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
-
 </html>
