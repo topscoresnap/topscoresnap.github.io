@@ -2,9 +2,7 @@ let data = [];
 
 
 fetch("data.json")
-
 .then(response => response.json())
-
 .then(json => {
 
 data = json;
@@ -19,7 +17,6 @@ showTop(data);
 
 function showTable(list){
 
-
 let html = "";
 
 
@@ -32,20 +29,29 @@ html += `
 
 <td>${user.rank}</td>
 
-<td>${user.username}</td>
+
+<td>
+
+<a href="player.html?user=${user.username}">
+
+${user.username}
+
+</a>
+
+</td>
+
 
 <td>${user.score}</td>
+
 
 </tr>
 
 `;
 
-
 });
 
 
 document.getElementById("table").innerHTML = html;
-
 
 }
 
@@ -58,7 +64,7 @@ function showTop(list){
 let html = "";
 
 
-list.slice(0,3).forEach((user)=>{
+list.slice(0,3).forEach(user => {
 
 
 html += `
@@ -67,9 +73,19 @@ html += `
 
 <h2>#${user.rank}</h2>
 
-<p>${user.username}</p>
+<p>
+
+<a href="player.html?user=${user.username}">
+
+${user.username}
+
+</a>
+
+</p>
+
 
 <strong>${user.score}</strong>
+
 
 </div>
 
@@ -99,7 +115,6 @@ searchBox.addEventListener("input",function(){
 let value = this.value.toLowerCase();
 
 
-
 let result = data.filter(user =>
 
 user.username.toLowerCase().includes(value)
@@ -107,9 +122,7 @@ user.username.toLowerCase().includes(value)
 );
 
 
-
 showTable(result);
-
 
 
 });
