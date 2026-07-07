@@ -1,91 +1,47 @@
-let data = [];
+let players = [];
 
 
 fetch("data.json")
 .then(response => response.json())
-.then(json => {
+.then(data => {
 
-data = json;
+players = data;
 
-showTable(data);
+displayTop();
+displayTable(players);
 
-showTop(data);
 
 });
 
 
 
-function showTable(list){
-
-let html = "";
 
 
-list.forEach(user => {
+function displayTop(){
+
+let top = document.getElementById("top");
+
+top.innerHTML="";
 
 
-html += `
-
-<tr>
-
-<td>${user.rank}</td>
+players.slice(0,3).forEach((player,index)=>{
 
 
-<td>
+top.innerHTML += `
 
-<a href="player.html?user=${user.username}">
+<div class="player-card">
 
-${user.username}
+<h1>#${index+1}</h1>
 
-</a>
+<h3>${player.username}</h3>
 
-</td>
-
-
-<td>${user.score}</td>
-
-
-</tr>
-
-`;
-
-});
-
-
-document.getElementById("table").innerHTML = html;
-
-}
-
-
-
-
-function showTop(list){
-
-
-let html = "";
-
-
-list.slice(0,3).forEach(user => {
-
-
-html += `
-
-<div class="card">
-
-<h2>#${user.rank}</h2>
-
-<p>
-
-<a href="player.html?user=${user.username}">
-
-${user.username}
-
-</a>
-
+<p class="score">
+${player.score}
 </p>
 
-
-<strong>${user.score}</strong>
-
+<p>
+Snap Score
+</p>
 
 </div>
 
@@ -95,37 +51,79 @@ ${user.username}
 });
 
 
-document.getElementById("top").innerHTML = html;
-
-
 }
 
 
 
 
-let searchBox = document.getElementById("search");
 
 
-if(searchBox){
+function displayTable(list){
 
 
-searchBox.addEventListener("input",function(){
+let table=document.getElementById("table");
+
+table.innerHTML="";
 
 
-let value = this.value.toLowerCase();
+list.forEach((player,index)=>{
 
 
-let result = data.filter(user =>
-
-user.username.toLowerCase().includes(value)
-
-);
+table.innerHTML += `
 
 
-showTable(result);
+<tr>
+
+
+<td>
+${index+1}
+</td>
+
+
+<td>
+${player.username}
+</td>
+
+
+
+<td class="score">
+${player.score}
+</td>
+
+
+
+</tr>
+
+
+`;
 
 
 });
 
 
 }
+
+
+
+
+
+
+document.getElementById("search").addEventListener("input",function(){
+
+
+let value=this.value.toLowerCase();
+
+
+let result=players.filter(player=>
+
+player.username.toLowerCase().includes(value)
+
+);
+
+
+
+displayTable(result);
+
+
+
+});
