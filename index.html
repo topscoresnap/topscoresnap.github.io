@@ -93,11 +93,7 @@
       <div class="board-panel facet">
 
         <div class="board-controls">
-          <div class="tabs" id="periodTabs" role="tablist">
-            <button class="tab active" data-period="all" role="tab" aria-selected="true" data-i18n="tabs.all">الكل</button>
-            <button class="tab" data-period="weekly" role="tab" aria-selected="false" data-i18n="tabs.weekly">أسبوعي</button>
-            <button class="tab" data-period="monthly" role="tab" aria-selected="false" data-i18n="tabs.monthly">شهري</button>
-          </div>
+          <h3 class="board-title" data-i18n="board.title">كل الحسابات</h3>
 
           <div class="search-box">
             <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.65 13.39l5.23 5.23a1 1 0 0 0 1.42-1.42l-5.23-5.23A7.5 7.5 0 0 0 10.5 3Zm-5.5 7.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z"/></svg>
@@ -109,7 +105,7 @@
           <table class="board-table">
             <thead>
               <tr>
-                <th class="col-rank" data-i18n="table.rank">الترتيب</th>
+                <th class="col-rank">#</th>
                 <th class="col-user" data-i18n="table.username">اليوزر</th>
                 <th class="col-score" data-i18n="table.score">النقاط</th>
               </tr>
@@ -121,8 +117,8 @@
 
           <div class="empty-state" id="emptyState" hidden>
             <img src="logo.png" alt="" class="empty-ghost">
-            <p class="empty-title" data-i18n="empty.title">لا توجد بيانات لهذه الفترة بعد</p>
-            <p class="empty-subtitle" data-i18n="empty.subtitle">راجعنا بعدين — نحدّث الأرقام أول بأول.</p>
+            <p class="empty-title" data-i18n="empty.title">لا توجد نتائج مطابقة</p>
+            <p class="empty-subtitle" data-i18n="empty.subtitle">جرّب كلمة بحث ثانية.</p>
           </div>
         </div>
 
