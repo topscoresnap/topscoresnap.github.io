@@ -344,27 +344,11 @@ html[dir="rtl"] .eyebrow { letter-spacing: 0; text-transform: none; }
   flex-wrap: wrap;
   margin-bottom: 18px;
 }
-.tabs {
-  display: flex;
-  gap: 6px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  padding: 4px;
-}
-.tab {
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  padding: 9px 18px;
-  font-size: .86rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease;
-}
-.tab:hover { color: var(--ice-200); }
-.tab.active {
-  background: linear-gradient(135deg, var(--ice-400), var(--ice-600));
-  color: #05131c;
+.board-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ice-100);
+  margin: 0;
 }
 
 .search-box {
