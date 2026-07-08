@@ -18,15 +18,12 @@
       "stats.highest": "أعلى نقاط",
       "stats.updated": "آخر تحديث",
       "podium.title": "أعلى 3 حسابات",
-      "tabs.all": "الكل",
-      "tabs.weekly": "أسبوعي",
-      "tabs.monthly": "شهري",
+      "board.title": "كل الحسابات",
       "search.placeholder": "ابحث عن يوزر...",
-      "table.rank": "الترتيب",
       "table.username": "اليوزر",
       "table.score": "النقاط",
-      "empty.title": "لا توجد بيانات لهذه الفترة بعد",
-      "empty.subtitle": "راجعنا بعدين — نحدّث الأرقام أول بأول.",
+      "empty.title": "لا توجد نتائج مطابقة",
+      "empty.subtitle": "جرّب كلمة بحث ثانية.",
       "about.eyebrow": "عن الموقع",
       "about.title": "ما هو TopScoreSnap؟",
       "about.p1": "TopScoreSnap لوحة عرض مستقلة تُعنى برصد أعلى حسابات Snapchat حول العالم من حيث نقاط Snap Score، وتُبنى القائمة حصرًا من الحسابات التي بلغت نقاطها مئة مليون نقطة فأكثر. الهدف أن يجد الزائر في مكانٍ واحد صورة واضحة عمّن يتصدّر هذا الترتيب عالميًا، دون الحاجة للبحث في مصادر متفرقة.",
@@ -64,15 +61,12 @@
       "stats.highest": "Highest Score",
       "stats.updated": "Last Updated",
       "podium.title": "Top 3 Accounts",
-      "tabs.all": "All Time",
-      "tabs.weekly": "Weekly",
-      "tabs.monthly": "Monthly",
+      "board.title": "All Accounts",
       "search.placeholder": "Search username...",
-      "table.rank": "Rank",
       "table.username": "Username",
       "table.score": "Score",
-      "empty.title": "No data for this period yet",
-      "empty.subtitle": "Check back soon — we update the numbers regularly.",
+      "empty.title": "No matching results",
+      "empty.subtitle": "Try a different search term.",
       "about.eyebrow": "About",
       "about.title": "What is TopScoreSnap?",
       "about.p1": "TopScoreSnap is an independent leaderboard dedicated to tracking the highest Snapchat accounts worldwide by Snap Score. The list is built exclusively from accounts that have reached 100 million points or more. The goal is simple: give visitors a clear picture, in one place, of who leads this ranking globally, without digging through scattered sources.",
@@ -99,8 +93,7 @@
 
   const LANG_KEY = "tss_lang";
   let currentLang = localStorage.getItem(LANG_KEY) || "ar";
-  let currentPeriod = "all";
-  let boardData = { meta: {}, periods: { all: [], weekly: [], monthly: [] } };
+  let boardData = { meta: {}, accounts: [] };
 
   /* ---------------- i18n ---------------- */
   function applyLanguage(lang) {
@@ -137,7 +130,7 @@
   }
 
   function renderStats() {
-    const list = boardData.periods.all || [];
+    const list = boardData.accounts || [];
     document.getElementById("statRanked").textContent = list.length;
     document.getElementById("statHighest").textContent = list[0] ? list[0].score : "—";
     document.getElementById("statUpdated").textContent = formatMonth(boardData.meta.lastUpdate, currentLang);
@@ -194,7 +187,7 @@
   }
 
   function getFilteredList() {
-    const list = boardData.periods[currentPeriod] || [];
+    const list = boardData.accounts || [];
     const q = document.getElementById("searchInput").value.trim().toLowerCase();
     if (!q) return list;
     return list.filter(e => e.username.toLowerCase().includes(q));
@@ -207,22 +200,6 @@
   }
 
   /* ---------------- events ---------------- */
-  function initTabs() {
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(b => {
-          b.classList.remove("active");
-          b.setAttribute("aria-selected", "false");
-        });
-        btn.classList.add("active");
-        btn.setAttribute("aria-selected", "true");
-        currentPeriod = btn.getAttribute("data-period");
-        document.getElementById("searchInput").value = "";
-        renderBoard();
-      });
-    });
-  }
-
   function initSearch() {
     document.getElementById("searchInput").addEventListener("input", renderBoard);
   }
@@ -238,7 +215,6 @@
   async function init() {
     document.getElementById("year").textContent = new Date().getFullYear();
     applyLanguage(currentLang);
-    initTabs();
     initSearch();
     initLangToggle();
 
@@ -247,7 +223,7 @@
       boardData = await res.json();
     } catch (err) {
       console.error("Could not load data.json", err);
-      boardData = { meta: {}, periods: { all: [], weekly: [], monthly: [] } };
+      boardData = { meta: {}, accounts: [] };
     }
 
     renderStats();
