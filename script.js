@@ -42,6 +42,7 @@
       "contact.title": "تواصل معنا",
       "contact.text": "إذا كنت تملك نقاطًا تقارب 100 مليون نقطة أو أكثر، أو تعرف شخصًا يملك ذلك، لا تتردد في التواصل معنا لإضافتك ضمن القائمة.",
       "contact.tiktok": "تابعنا على TikTok",
+      "cert.podiumBtn": "شهادة الإنجاز",
       "footer.tagline": "تتبع أعلى نقاط سناب شات، ببساطة.",
       "footer.rights": "جميع الحقوق محفوظة",
       "toggleLabel": "EN"
@@ -85,6 +86,7 @@
       "contact.title": "Get in touch",
       "contact.text": "If you have around 100 million points or more — or know someone who does — feel free to reach out and we'll add you to the list.",
       "contact.tiktok": "Follow us on TikTok",
+      "cert.podiumBtn": "Get Certificate",
       "footer.tagline": "Tracking the highest Snapchat scores, made simple.",
       "footer.rights": "All rights reserved",
       "toggleLabel": "عربي"
@@ -99,6 +101,7 @@
   function applyLanguage(lang) {
     currentLang = lang;
     localStorage.setItem(LANG_KEY, lang);
+    window.TSS_LANG = lang;
 
     const dict = translations[lang];
     document.documentElement.lang = lang;
@@ -117,6 +120,7 @@
     document.title = lang === "ar"
       ? "TopScoreSnap — أعلى نقاط سناب شات"
       : "TopScoreSnap — Highest Snapchat Scores";
+    window.dispatchEvent(new CustomEvent("tss:lang-change", { detail: lang }));
   }
 
   /* ---------------- rendering ---------------- */
@@ -148,6 +152,10 @@
         <div class="podium-badge">${entry.rank}</div>
         <p class="podium-user">${escapeHtml(entry.username)}</p>
         <p class="podium-score">${escapeHtml(entry.score)}</p>
+        <button type="button" class="podium-cert-btn facet" data-cert-trigger data-cert-user="${escapeHtml(entry.username)}">
+          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Zm-1.2 13.6-3.4-3.4 1.4-1.4 2 2 4.6-4.6 1.4 1.4-6 6Z"/></svg>
+          <span data-i18n="cert.podiumBtn">شهادة الإنجاز</span>
+        </button>
       `;
       podium.appendChild(card);
     });
@@ -170,10 +178,18 @@
     const frag = document.createDocumentFragment();
     list.forEach(entry => {
       const tr = document.createElement("tr");
+      tr.className = "cert-row";
+      tr.tabIndex = 0;
+      tr.setAttribute("role", "button");
+      tr.setAttribute("data-cert-trigger", "");
+      tr.setAttribute("data-cert-user", entry.username);
       tr.innerHTML = `
         <td class="col-rank"><span class="rank-num">#${entry.rank}</span></td>
         <td class="col-user row-username">${escapeHtml(entry.username)}</td>
-        <td class="col-score row-score">${escapeHtml(entry.score)}</td>
+        <td class="col-score row-score">
+          <span>${escapeHtml(entry.score)}</span>
+          <svg class="cert-row-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Zm-1.2 13.6-3.4-3.4 1.4-1.4 2 2 4.6-4.6 1.4 1.4-6 6Z"/></svg>
+        </td>
       `;
       frag.appendChild(tr);
     });
@@ -197,6 +213,7 @@
     const list = getFilteredList();
     renderPodium(document.getElementById("searchInput").value.trim() ? [] : list);
     renderTable(list);
+    applyLanguage(currentLang);
   }
 
   /* ---------------- events ---------------- */
@@ -225,6 +242,8 @@
       console.error("Could not load data.json", err);
       boardData = { meta: {}, accounts: [] };
     }
+    window.TSS_DATA = boardData;
+    window.dispatchEvent(new CustomEvent("tss:data-ready", { detail: boardData }));
 
     renderStats();
     renderBoard();
