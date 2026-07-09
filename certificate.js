@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  /* ---------------- copy ---------------- */
+  /* ---------------- copy (card's own internal text) ---------------- */
   const STR = {
     ar: {
       eyebrow: "شهادة إنجاز موثّقة",
@@ -14,13 +14,7 @@
       dateLabel: "تاريخ التوثيق",
       scanLabel: "امسح للتحقق",
       disclaimer: "لوحة مستقلة غير رسمية — غير تابعة لشركة Snap Inc. أو تطبيق Snapchat.",
-      loading: "جارٍ توثيق الإنجاز...",
-      download: "تحميل الشهادة",
-      share: "مشاركة",
-      copyLink: "نسخ رابط التحقق",
-      copied: "تم النسخ",
-      verifiedPill: "موثّق",
-      notFound: "تعذّر العثور على هذا الحساب في القائمة الحالية."
+      verifiedPill: "موثّق"
     },
     en: {
       eyebrow: "Verified Achievement Certificate",
@@ -33,18 +27,11 @@
       dateLabel: "Verified On",
       scanLabel: "Scan to verify",
       disclaimer: "Independent, unofficial leaderboard — not affiliated with Snap Inc. or Snapchat.",
-      loading: "Authenticating achievement...",
-      download: "Download Certificate",
-      share: "Share",
-      copyLink: "Copy Verify Link",
-      copied: "Copied",
-      verifiedPill: "Verified",
-      notFound: "This account could not be found on the current list."
+      verifiedPill: "Verified"
     }
   };
 
-  function lang() { return window.TSS_LANG || document.documentElement.lang || "ar"; }
-  function t(key) { return (STR[lang()] || STR.ar)[key] || key; }
+  function t(key, lng) { return (STR[lng] || STR.ar)[key] || key; }
 
   /* ---------------- helpers ---------------- */
   function hashId(str) {
@@ -82,8 +69,12 @@
     return div.innerHTML;
   }
 
-  function buildCertData(username) {
-    const data = window.TSS_DATA;
+  /**
+   * Builds the certificate data object for a username.
+   * The certificate IMAGE always uses the public, abbreviated score
+   * from data.json — never the separate full-score file.
+   */
+  function buildCertData(username, data) {
     if (!data || !Array.isArray(data.accounts)) return null;
     const account = data.accounts.find(a => a.username.toLowerCase() === String(username).toLowerCase());
     if (!account) return null;
@@ -104,123 +95,83 @@
     };
   }
 
-  /* ---------------- modal shell ---------------- */
-  const modalEl = () => document.getElementById("certModal");
-  const bodyEl = () => document.getElementById("certModalBody");
-  let lastFocused = null;
-
-  function openModal() {
-    lastFocused = document.activeElement;
-    modalEl().classList.add("open");
-    modalEl().setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    const closeBtn = modalEl().querySelector(".cert-close");
-    if (closeBtn) closeBtn.focus();
-  }
-
-  function closeModal() {
-    modalEl().classList.remove("open");
-    modalEl().setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    setTimeout(() => { bodyEl().innerHTML = ""; }, 250);
-    if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
-  }
-
-  function renderLoading() {
-    bodyEl().innerHTML = `
-      <div class="cert-loading">
-        <div class="cert-loading-ring"></div>
-        <p class="cert-loading-text">${t("loading")}</p>
-      </div>`;
-  }
-
-  function renderNotFound() {
-    bodyEl().innerHTML = `<div class="cert-loading"><p class="cert-loading-text">${t("notFound")}</p></div>`;
-  }
-
-  /* ---------------- certificate render ---------------- */
-  function renderCertificate(cd) {
-    const L = lang();
-    const dir = L === "ar" ? "rtl" : "ltr";
+  /* ---------------- card markup ---------------- */
+  function cardHTML(cd, lng) {
+    const dir = lng === "ar" ? "rtl" : "ltr";
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(cd.verifyUrl)}`;
-
-    bodyEl().innerHTML = `
-      <div class="cert-scaler" id="certScaler">
-        <div class="cert-card tier-${cd.tier}" id="certCard" dir="${dir}" lang="${L}">
-          <div class="cert-watermark"><img src="logo.png" alt=""></div>
-          <div class="cert-frame">
-            <div class="cert-top">
-              <div class="cert-brand">
-                <img src="logo.png" alt="" class="cert-brand-mark">
-                <span>TopScoreSnap</span>
-              </div>
-              <div class="cert-verified-pill">
-                <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Zm-1.2 13.6-3.4-3.4 1.4-1.4 2 2 4.6-4.6 1.4 1.4-6 6Z"/></svg>
-                <span>${t("verifiedPill")}</span>
-              </div>
+    return `
+      <div class="cert-card tier-${cd.tier}" dir="${dir}" lang="${lng}">
+        <div class="cert-watermark"><img src="logo.png" alt=""></div>
+        <div class="cert-frame">
+          <div class="cert-top">
+            <div class="cert-brand">
+              <img src="logo.png" alt="" class="cert-brand-mark">
+              <span>TopScoreSnap</span>
             </div>
-
-            <p class="cert-eyebrow">${t("eyebrow")}</p>
-
-            <div class="cert-seal tier-${cd.tier}"><span>#${cd.rank}</span></div>
-
-            <h2 class="cert-username">${escapeHtml(cd.username)}</h2>
-            <p class="cert-subtitle">${t("subtitle")}</p>
-
-            <div class="cert-score-block">
-              <span class="cert-score-value">${escapeHtml(cd.score)}</span>
-              <span class="cert-score-label">${t("scoreLabel")}</span>
+            <div class="cert-verified-pill">
+              <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Zm-1.2 13.6-3.4-3.4 1.4-1.4 2 2 4.6-4.6 1.4 1.4-6 6Z"/></svg>
+              <span>${t("verifiedPill", lng)}</span>
             </div>
-
-            <div class="cert-chips">
-              <div class="cert-chip facet">
-                <span class="cert-chip-value">#${cd.rank}</span>
-                <span class="cert-chip-label">${t("rankLabel")}</span>
-              </div>
-              <div class="cert-chip facet">
-                <span class="cert-chip-value">${t("topLabel")} ${cd.topPercent}%</span>
-                <span class="cert-chip-label">${t("percentileLabel")}</span>
-              </div>
-            </div>
-
-            <div class="cert-divider"></div>
-
-            <div class="cert-footer">
-              <div class="cert-footer-meta">
-                <p><span>${t("idLabel")}:</span><b>${cd.certId}</b></p>
-                <p><span>${t("dateLabel")}:</span><b>${formatDate(cd.date, L)}</b></p>
-              </div>
-              <div class="cert-footer-qr">
-                <img src="${qrUrl}" alt="QR" crossorigin="anonymous" width="72" height="72">
-                <span>${t("scanLabel")}</span>
-              </div>
-            </div>
-
-            <p class="cert-fine-print">${t("disclaimer")}</p>
           </div>
+
+          <p class="cert-eyebrow">${t("eyebrow", lng)}</p>
+
+          <div class="cert-seal tier-${cd.tier}"><span>#${cd.rank}</span></div>
+
+          <h2 class="cert-username">${escapeHtml(cd.username)}</h2>
+          <p class="cert-subtitle">${t("subtitle", lng)}</p>
+
+          <div class="cert-score-block">
+            <span class="cert-score-value">${escapeHtml(cd.score)}</span>
+            <span class="cert-score-label">${t("scoreLabel", lng)}</span>
+          </div>
+
+          <div class="cert-chips">
+            <div class="cert-chip facet">
+              <span class="cert-chip-value">#${cd.rank}</span>
+              <span class="cert-chip-label">${t("rankLabel", lng)}</span>
+            </div>
+            <div class="cert-chip facet">
+              <span class="cert-chip-value">${t("topLabel", lng)} ${cd.topPercent}%</span>
+              <span class="cert-chip-label">${t("percentileLabel", lng)}</span>
+            </div>
+          </div>
+
+          <div class="cert-divider"></div>
+
+          <div class="cert-footer">
+            <div class="cert-footer-meta">
+              <p><span>${t("idLabel", lng)}:</span><b>${cd.certId}</b></p>
+              <p><span>${t("dateLabel", lng)}:</span><b>${formatDate(cd.date, lng)}</b></p>
+            </div>
+            <div class="cert-footer-qr">
+              <img src="${qrUrl}" alt="QR" crossorigin="anonymous" width="72" height="72">
+              <span>${t("scanLabel", lng)}</span>
+            </div>
+          </div>
+
+          <p class="cert-fine-print">${t("disclaimer", lng)}</p>
         </div>
-      </div>
-
-      <div class="cert-actions">
-        <button type="button" class="btn btn-primary facet cert-download" id="certDownloadBtn">${t("download")}</button>
-        <button type="button" class="btn btn-ghost facet" id="certShareBtn">${t("share")}</button>
-        <button type="button" class="btn btn-ghost facet" id="certCopyBtn">${t("copyLink")}</button>
       </div>`;
-
-    fitScaler();
-    requestAnimationFrame(() => {
-      const card = document.getElementById("certCard");
-      if (card) card.classList.add("reveal");
-    });
-
-    document.getElementById("certDownloadBtn").addEventListener("click", () => downloadCert(cd));
-    document.getElementById("certShareBtn").addEventListener("click", () => shareCert(cd));
-    document.getElementById("certCopyBtn").addEventListener("click", e => copyLink(cd, e.currentTarget));
   }
 
-  function fitScaler() {
-    const scaler = document.getElementById("certScaler");
-    const card = document.getElementById("certCard");
+  /**
+   * Mounts the certificate card into a container, scaled to fit, with a reveal animation.
+   * Returns the mounted .cert-card element.
+   */
+  function mount(container, cd, lng) {
+    container.innerHTML = `<div class="cert-scaler" id="certScaler">${cardHTML(cd, lng)}</div>`;
+    const scaler = container.querySelector("#certScaler");
+    const card = container.querySelector(".cert-card");
+    fitScaler(scaler, card);
+    requestAnimationFrame(() => card.classList.add("reveal"));
+    const onResize = () => fitScaler(scaler, card);
+    window.addEventListener("resize", onResize);
+    card._tssCleanup = () => window.removeEventListener("resize", onResize);
+    return card;
+  }
+
+  function fitScaler(scaler, card) {
     if (!scaler || !card) return;
     const avail = scaler.clientWidth;
     const scale = Math.min(1, (avail - 8) / 540);
@@ -229,9 +180,8 @@
   }
 
   /* ---------------- export ---------------- */
-  async function renderToCanvas() {
-    const original = document.getElementById("certCard");
-    const clone = original.cloneNode(true);
+  async function exportCanvas(cardEl) {
+    const clone = cardEl.cloneNode(true);
     clone.classList.add("reveal");
     clone.style.transform = "none";
     clone.style.position = "fixed";
@@ -252,30 +202,27 @@
     }
   }
 
-  async function downloadCert(cd) {
-    const btn = document.getElementById("certDownloadBtn");
-    const original = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "...";
+  async function downloadFromCard(cd, cardEl, onStateChange) {
+    if (onStateChange) onStateChange("busy");
     try {
-      const canvas = await renderToCanvas();
+      const canvas = await exportCanvas(cardEl);
       const link = document.createElement("a");
       link.download = `topscoresnap-${cd.username}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
+      if (onStateChange) onStateChange("done");
     } catch (err) {
       console.error("Certificate export failed", err);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = original;
+      if (onStateChange) onStateChange("error");
     }
   }
 
-  async function shareCert(cd) {
+  async function shareFromCard(cd, cardEl, onStateChange) {
+    if (onStateChange) onStateChange("busy");
     try {
-      const canvas = await renderToCanvas();
+      const canvas = await exportCanvas(cardEl);
       canvas.toBlob(async blob => {
-        if (!blob) return;
+        if (!blob) { if (onStateChange) onStateChange("error"); return; }
         const file = new File([blob], `topscoresnap-${cd.username}.png`, { type: "image/png" });
         try {
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -283,70 +230,28 @@
           } else if (navigator.share) {
             await navigator.share({ title: "TopScoreSnap", text: cd.verifyUrl, url: cd.verifyUrl });
           } else {
-            downloadCert(cd);
+            await downloadFromCard(cd, cardEl, onStateChange);
+            return;
           }
+          if (onStateChange) onStateChange("done");
         } catch (err) {
           if (err && err.name !== "AbortError") console.error("Share failed", err);
+          if (onStateChange) onStateChange("done");
         }
       }, "image/png");
     } catch (err) {
       console.error("Certificate export failed", err);
+      if (onStateChange) onStateChange("error");
     }
   }
 
-  function copyLink(cd, btn) {
-    navigator.clipboard.writeText(cd.verifyUrl).then(() => {
-      const original = btn.textContent;
-      btn.textContent = t("copied");
-      setTimeout(() => { btn.textContent = original; }, 1600);
-    }).catch(() => {});
-  }
-
-  /* ---------------- open flow ---------------- */
-  function openCertificateFor(username) {
-    if (!username) return;
-    openModal();
-    renderLoading();
-    const start = Date.now();
-    const cd = buildCertData(username);
-    const minDelay = 700; // brief ceremonial pause before the reveal
-    const elapsed = Date.now() - start;
-    setTimeout(() => {
-      if (!modalEl().classList.contains("open")) return;
-      if (!cd) { renderNotFound(); return; }
-      renderCertificate(cd);
-    }, Math.max(0, minDelay - elapsed));
-  }
-
-  /* ---------------- global events ---------------- */
-  document.addEventListener("click", e => {
-    const trigger = e.target.closest("[data-cert-trigger]");
-    if (trigger) {
-      openCertificateFor(trigger.getAttribute("data-cert-user"));
-      return;
-    }
-    if (e.target.closest("[data-cert-close]")) closeModal();
-  });
-
-  document.addEventListener("keydown", e => {
-    if ((e.key === "Enter" || e.key === " ") && document.activeElement && document.activeElement.classList.contains("cert-row")) {
-      e.preventDefault();
-      openCertificateFor(document.activeElement.getAttribute("data-cert-user"));
-    }
-    if (e.key === "Escape" && modalEl().classList.contains("open")) closeModal();
-  });
-
-  window.addEventListener("resize", () => {
-    if (modalEl().classList.contains("open")) fitScaler();
-  });
-
-  window.addEventListener("tss:lang-change", () => {
-    // If a certificate is currently open, re-render it in the new language.
-    const card = document.getElementById("certCard");
-    if (!card) return;
-    const usernameEl = card.querySelector(".cert-username");
-    if (!usernameEl) return;
-    const cd = buildCertData(usernameEl.textContent);
-    if (cd) renderCertificate(cd);
-  });
+  window.TSSCertificate = {
+    buildCertData,
+    cardHTML,
+    mount,
+    exportCanvas,
+    downloadFromCard,
+    shareFromCard,
+    hashId
+  };
 })();
