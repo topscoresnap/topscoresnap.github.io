@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopScoreSnap — التحقق من الشهادة</title>
+<meta name="description" content="تحقق من صحة شهادة TopScoreSnap وشاهد أحدث بيانات الحساب الموثّقة.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="logo.png" alt="TopScoreSnap" class="brand-mark">
+      <span class="brand-name">TopScoreSnap</span>
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+    </nav>
+    <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">
+      <span class="lang-toggle-dot" aria-hidden="true"></span>
+      <span id="langToggleLabel">EN</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="verify-section">
+    <div class="wrap verify-wrap">
+      <p class="eyebrow verify-eyebrow" data-i18n="verify.eyebrow">التحقق من الشهادة</p>
+      <div id="verifyResult" class="verify-result">
+        <div class="cert-loading">
+          <div class="cert-loading-ring"></div>
+          <p class="cert-loading-text" data-i18n="verify.checking">جارٍ التحقق...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="logo.png" alt="" class="brand-mark small">
+      <span class="brand-name">TopScoreSnap</span>
+    </div>
+    <p class="footer-tagline" data-i18n="footer.tagline">تتبع أعلى نقاط سناب شات، ببساطة.</p>
+    <p class="footer-rights">© <span id="year"></span> TopScoreSnap · <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
+  </div>
+</footer>
+
+<!-- CERTIFICATE MODAL (for re-downloading from the verify page) -->
+<div class="cert-modal" id="certModal" aria-hidden="true">
+  <div class="cert-modal-backdrop" data-cert-close></div>
+  <div class="cert-modal-panel">
+    <button class="cert-close" type="button" data-cert-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4l-6.3 6.3-1.41-1.42L9.17 12l-6.29-6.3L4.3 4.3l6.29 6.29 6.3-6.3z"/></svg>
+    </button>
+    <div class="cert-modal-body" id="certModalBody"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="certificate.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  const VSTR = {
+    ar: {
+      "nav.home": "الرئيسية",
+      "footer.tagline": "تتبع أعلى نقاط سناب شات، ببساطة.",
+      "footer.rights": "جميع الحقوق محفوظة",
+      "verify.eyebrow": "التحقق من الشهادة",
+      "verify.checking": "جارٍ التحقق...",
+      "verify.verifiedTitle": "شهادة أصلية وموثّقة ✓",
+      "verify.verifiedDesc": "هذه الشهادة صادرة عن TopScoreSnap، وتم التأكد من تطابقها مع بيانات القائمة الحالية.",
+      "verify.mismatchTitle": "رقم الشهادة غير مطابق",
+      "verify.mismatchDesc": "الحساب موجود في القائمة، لكن رقم الشهادة في هذا الرابط لا يطابق سجلاتنا. قد يكون الرابط مُعدّلًا.",
+      "verify.notFoundTitle": "لم يتم العثور على هذا الحساب",
+      "verify.notFoundDesc": "هذا الحساب غير مدرج حاليًا ضمن القائمة النشطة — قد يكون تم إزالته أو حظره.",
+      "verify.invalidTitle": "رابط تحقق غير صالح",
+      "verify.invalidDesc": "تأكد من فتح رابط التحقق كاملاً كما هو، أو امسح رمز QR من الشهادة مباشرة.",
+      "verify.username": "اليوزر",
+      "verify.score": "نقاط Snap Score",
+      "verify.rank": "الترتيب العالمي",
+      "verify.percentile": "من أفضل",
+      "verify.id": "رقم الشهادة",
+      "verify.updated": "آخر تحديث للبيانات",
+      "verify.viewCert": "عرض / تحميل الشهادة",
+      "verify.backHome": "الرجوع للوحة المتصدرين",
+      "toggleLabel": "EN"
+    },
+    en: {
+      "nav.home": "Home",
+      "footer.tagline": "Tracking the highest Snapchat scores, made simple.",
+      "footer.rights": "All rights reserved",
+      "verify.eyebrow": "Certificate Verification",
+      "verify.checking": "Verifying...",
+      "verify.verifiedTitle": "Authentic, Verified Certificate ✓",
+      "verify.verifiedDesc": "This certificate was issued by TopScoreSnap and matches our current leaderboard records.",
+      "verify.mismatchTitle": "Certificate ID Mismatch",
+      "verify.mismatchDesc": "This account exists on the leaderboard, but the certificate ID in this link doesn't match our records. The link may have been altered.",
+      "verify.notFoundTitle": "Account Not Found",
+      "verify.notFoundDesc": "This account isn't on the current active leaderboard — it may have been removed or banned.",
+      "verify.invalidTitle": "Invalid Verification Link",
+      "verify.invalidDesc": "Make sure you opened the full verification link, or scan the QR code directly from the certificate.",
+      "verify.username": "Username",
+      "verify.score": "Snap Score",
+      "verify.rank": "Global Rank",
+      "verify.percentile": "Top",
+      "verify.id": "Certificate ID",
+      "verify.updated": "Data last updated",
+      "verify.viewCert": "View / Download Certificate",
+      "verify.backHome": "Back to Leaderboard",
+      "toggleLabel": "عربي"
+    }
+  };
+
+  const LANG_KEY = "tss_lang";
+  let lang = localStorage.getItem(LANG_KEY) || "ar";
+  let lastState = null;
+
+  function t(key) { return VSTR[lang][key] || key; }
+
+  function applyStaticLanguage() {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (VSTR[lang][key]) el.textContent = VSTR[lang][key];
+    });
+    document.getElementById("langToggleLabel").textContent = VSTR[lang].toggleLabel;
+    window.TSS_LANG = lang;
+  }
+
+  function hashId(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+    return (h >>> 0).toString(36).toUpperCase().padStart(7, "0");
+  }
+
+  function formatDate(ym) {
+    if (!ym) return "—";
+    const [y, m] = ym.split("-").map(Number);
+    const monthsAr = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+    const monthsEn = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const names = lang === "ar" ? monthsAr : monthsEn;
+    return `${names[m - 1]} ${y}`;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderState() {
+    const el = document.getElementById("verifyResult");
+    if (!lastState) return;
+    const s = lastState;
+
+    if (s.type === "invalid") {
+      el.innerHTML = statusBlock("neutral", t("verify.invalidTitle"), t("verify.invalidDesc"));
+      return;
+    }
+    if (s.type === "notfound") {
+      el.innerHTML = statusBlock("warn", t("verify.notFoundTitle"), t("verify.notFoundDesc"));
+      return;
+    }
+    if (s.type === "mismatch") {
+      el.innerHTML = statusBlock("warn", t("verify.mismatchTitle"), t("verify.mismatchDesc")) + detailCard(s, false);
+      return;
+    }
+    el.innerHTML = statusBlock("ok", t("verify.verifiedTitle"), t("verify.verifiedDesc")) + detailCard(s, true);
+  }
+
+  function statusBlock(kind, title, desc) {
+    const icon = kind === "ok"
+      ? '<path fill="currentColor" d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Zm-1.2 13.6-3.4-3.4 1.4-1.4 2 2 4.6-4.6 1.4 1.4-6 6Z"/>'
+      : kind === "warn"
+        ? '<path fill="currentColor" d="M12 2 1 21h22L12 2Zm0 6 5.6 10.5H6.4L12 8Zm-1 3v3.5h2V11h-2Zm0 5v2h2v-2h-2Z"/>'
+        : '<path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/>';
+    return `
+      <div class="verify-status verify-status-${kind}">
+        <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">${icon}</svg>
+        <h1 class="verify-title">${title}</h1>
+        <p class="verify-desc">${desc}</p>
+      </div>`;
+  }
+
+  function detailCard(s, verified) {
+    return `
+      <div class="verify-detail facet">
+        <div class="verify-detail-row"><span>${t("verify.username")}</span><b>${escapeHtml(s.username)}</b></div>
+        <div class="verify-detail-row"><span>${t("verify.score")}</span><b>${escapeHtml(s.score)}</b></div>
+        <div class="verify-detail-row"><span>${t("verify.rank")}</span><b>#${s.rank}</b></div>
+        <div class="verify-detail-row"><span>${t("verify.percentile")}</span><b>${t("verify.percentile")} ${s.topPercent}%</b></div>
+        <div class="verify-detail-row"><span>${t("verify.id")}</span><b>${escapeHtml(s.certId)}</b></div>
+        <div class="verify-detail-row"><span>${t("verify.updated")}</span><b>${formatDate(s.lastUpdate)}</b></div>
+        ${verified ? `<button type="button" class="btn btn-primary facet verify-cert-btn" data-cert-trigger data-cert-user="${escapeHtml(s.username)}">${t("verify.viewCert")}</button>` : ""}
+        <a href="index.html" class="btn btn-ghost facet verify-home-btn">${t("verify.backHome")}</a>
+      </div>`;
+  }
+
+  async function verify() {
+    const params = new URLSearchParams(location.search);
+    const username = params.get("u");
+    const id = params.get("id");
+
+    if (!username || !id) {
+      lastState = { type: "invalid" };
+      renderState();
+      return;
+    }
+
+    let data;
+    try {
+      const res = await fetch("data.json", { cache: "no-store" });
+      data = await res.json();
+    } catch (err) {
+      data = { meta: {}, accounts: [] };
+    }
+    window.TSS_DATA = data;
+
+    const account = (data.accounts || []).find(a => a.username.toLowerCase() === username.toLowerCase());
+    if (!account) {
+      lastState = { type: "notfound" };
+      renderState();
+      return;
+    }
+
+    const expectedId = "TSS-" + hashId(account.username.toLowerCase());
+    const total = data.accounts.length;
+    const topPercent = Math.max(1, Math.ceil((account.rank / total) * 100));
+    const common = {
+      username: account.username,
+      score: account.score,
+      rank: account.rank,
+      topPercent,
+      certId: expectedId,
+      lastUpdate: data.meta && data.meta.lastUpdate
+    };
+
+    lastState = expectedId === id ? { type: "ok", ...common } : { type: "mismatch", ...common };
+    renderState();
+  }
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+  applyStaticLanguage();
+  verify();
+
+  document.getElementById("langToggle").addEventListener("click", () => {
+    lang = lang === "ar" ? "en" : "ar";
+    localStorage.setItem(LANG_KEY, lang);
+    applyStaticLanguage();
+    renderState();
+    window.dispatchEvent(new CustomEvent("tss:lang-change", { detail: lang }));
+  });
+})();
+</script>
+</body>
+</html>
