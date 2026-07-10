@@ -50,6 +50,27 @@
     return "ice";
   }
 
+  /** Parses an abbreviated ("1.1B+") or comma-formatted ("1,111,140,867") score string into a number. */
+  function parseScore(str) {
+    if (!str) return 0;
+    let s = String(str).trim().toUpperCase().replace(/,/g, "").replace(/\+$/, "");
+    let mult = 1;
+    const last = s.slice(-1);
+    if (last === "B") { mult = 1e9; s = s.slice(0, -1); }
+    else if (last === "M") { mult = 1e6; s = s.slice(0, -1); }
+    else if (last === "K") { mult = 1e3; s = s.slice(0, -1); }
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n * mult;
+  }
+
+  /** Returns which score club an account belongs to, based on its public (abbreviated) score. */
+  function clubOf(scoreStr) {
+    const n = parseScore(scoreStr);
+    if (n >= 1e9) return "billion";
+    if (n >= 250e6) return "elite";
+    return "verified";
+  }
+
   function getBaseUrl() {
     const path = location.pathname;
     const dir = path.substring(0, path.lastIndexOf("/") + 1);
@@ -252,6 +273,8 @@
     exportCanvas,
     downloadFromCard,
     shareFromCard,
-    hashId
+    hashId,
+    parseScore,
+    clubOf
   };
 })();
