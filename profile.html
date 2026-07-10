@@ -84,6 +84,9 @@
       "profile.invalidTitle": "رابط غير صالح",
       "profile.invalidDesc": "افتح هذه الصفحة من رابط أو زر داخل الموقع.",
       "profile.backHome": "الرجوع للوحة المتصدرين",
+      "club.billion": "نادي المليار",
+      "club.elite": "نادي 250 مليون+",
+      "club.verified": "نادي 100 مليون+",
       "toggleLabel": "EN"
     },
     en: {
@@ -109,6 +112,9 @@
       "profile.invalidTitle": "Invalid Link",
       "profile.invalidDesc": "Please open this page from a link or button inside the site.",
       "profile.backHome": "Back to Leaderboard",
+      "club.billion": "Billion Club",
+      "club.elite": "250M+ Club",
+      "club.verified": "100M+ Club",
       "toggleLabel": "عربي"
     }
   };
@@ -155,6 +161,7 @@
 
   function renderProfile(account, fullScore) {
     const hasFull = fullScore && String(fullScore).trim().length > 0;
+    const club = window.TSSCertificate.clubOf(account.score);
     document.getElementById("profileWrap").innerHTML = `
       <div class="profile-hero">
         <div class="cert-verified-pill profile-pill"><span>✓</span></div>
@@ -162,6 +169,10 @@
         <div class="cert-seal tier-${cd.tier} profile-seal"><span>#${cd.rank}</span></div>
         <h1 class="profile-username">${escapeHtml(account.username)}</h1>
         <p class="profile-subtitle">${t("profile.subtitle")}</p>
+        <div class="club-badge club-${club}">
+          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M6 3h12v2h2a1 1 0 0 1 1 1c0 3-2 5-4.5 5.4A5.5 5.5 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.5 5.5 0 0 1 7.5 11.4C5 11 3 9 3 6a1 1 0 0 1 1-1h2V3Zm0 4H5c.3 1.4 1.3 2.4 2.6 2.8A6 6 0 0 1 6 7Zm12 0a6 6 0 0 1-1.6 2.8C17.7 9.4 18.7 8.4 19 7h-1Z"/></svg>
+          <span>${t("club." + club)}</span>
+        </div>
 
         <div class="profile-score-block">
           <span class="cert-score-value profile-score-value">${escapeHtml(hasFull ? fullScore : account.score)}</span>
