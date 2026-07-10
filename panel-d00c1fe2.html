@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopScoreSnap</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: 'Tajawal', sans-serif; }
+  .admin-wrap { max-width: 900px; padding: 40px 20px 100px; margin: 0 auto; position: relative; z-index: 1; }
+  .admin-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 6px; color: var(--ice-100); }
+  .admin-sub { color: var(--text-dim); font-size: .9rem; margin: 0 0 28px; }
+  .admin-banner {
+    background: var(--bg-card-2); border: 1px solid rgba(227,183,104,.25);
+    padding: 14px 18px; font-size: .84rem; color: var(--text-dim); margin-bottom: 22px;
+  }
+  .admin-banner.error { border-color: rgba(224,128,106,.4); color: var(--down); }
+  .admin-toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
+  }
+  .admin-btn {
+    background: var(--bg-card); border: 1px solid var(--border-hi); color: var(--ice-200);
+    padding: 10px 16px; font-size: .82rem; font-weight: 700; cursor: pointer;
+    transition: border-color .15s ease;
+  }
+  .admin-btn:hover { border-color: var(--ice-400); }
+  .admin-btn.primary { background: linear-gradient(135deg, var(--ice-300), var(--ice-600)); color: #05131c; border: none; }
+  .admin-btn:disabled { opacity: .4; cursor: not-allowed; }
+  input[type="file"] { display: none; }
+
+  .admin-table-wrap { overflow-x: auto; border: 1px solid var(--border); background: var(--bg-card); margin-bottom: 30px; }
+  table.admin-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+  .admin-table th {
+    text-align: start; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--text-faint); font-weight: 700; padding: 10px 10px; border-bottom: 1px solid var(--border);
+  }
+  .admin-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table input[type="text"] {
+    width: 100%; background: var(--bg-alt); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 10px; font-size: .86rem; font-family: 'JetBrains Mono', monospace;
+  }
+  .admin-table input.invalid { border-color: var(--down); }
+  .admin-rank-cell { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-dim); white-space: nowrap; }
+  .admin-delta { font-size: .68rem; font-weight: 800; margin-inline-start: 6px; }
+  .admin-delta.up { color: var(--up); }
+  .admin-delta.down { color: var(--down); }
+  .admin-delta.new { color: var(--gold); }
+  .admin-parsed { font-size: .68rem; color: var(--text-faint); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+  .admin-move-btns { display: flex; flex-direction: column; gap: 2px; }
+  .admin-icon-btn {
+    background: var(--bg-alt); border: 1px solid var(--border); color: var(--text-dim);
+    width: 26px; height: 22px; font-size: .7rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .admin-icon-btn:hover { color: var(--ice-300); border-color: var(--ice-400); }
+  .admin-del-btn { color: var(--down); border-color: rgba(224,128,106,.35); }
+
+  .admin-section-title { font-size: 1.1rem; font-weight: 800; color: var(--ice-100); margin: 40px 0 6px; }
+  .admin-section-desc { color: var(--text-dim); font-size: .84rem; margin: 0 0 16px; }
+
+  .admin-json-preview {
+    background: var(--bg-alt); border: 1px solid var(--border); padding: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: .74rem; color: var(--text-dim);
+    max-height: 300px; overflow: auto; white-space: pre-wrap; word-break: break-all;
+    display: none;
+  }
+  .admin-json-preview.shown { display: block; }
+
+  /* ---- access gate ---- */
+  .gate-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); padding: 24px;
+  }
+  .gate-box {
+    width: 100%; max-width: 380px;
+    background: var(--bg-card); border: 1px solid var(--border-hi);
+    padding: 32px 26px; text-align: center;
+  }
+  .gate-box img { width: 34px; margin: 0 auto 16px; display: block; }
+  .gate-title { font-size: 1.15rem; font-weight: 800; color: var(--ice-100); margin: 0 0 8px; }
+  .gate-desc { font-size: .84rem; color: var(--text-dim); margin: 0 0 20px; line-height: 1.7; }
+  .gate-box input[type="password"] {
+    width: 100%; background: var(--bg-alt); border: 1px solid var(--border); color: var(--text);
+    padding: 12px 14px; font-size: .95rem; margin-bottom: 10px; text-align: center; letter-spacing: .1em;
+  }
+  .gate-error { color: var(--down); font-size: .82rem; min-height: 18px; margin-bottom: 8px; }
+  .gate-hash-box {
+    background: var(--bg-alt); border: 1px solid var(--border); padding: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--ice-300);
+    word-break: break-all; margin: 14px 0; text-align: start;
+  }
+  .gate-note { font-size: .74rem; color: var(--text-faint); line-height: 1.7; text-align: start; margin-top: 10px; }
+  #appRoot { display: none; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow" aria-hidden="true"></div>
+
+<div class="gate-overlay" id="gateOverlay">
+  <div class="gate-box" id="gateBox"><!-- injected by script --></div>
+</div>
+
+<div id="appRoot">
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="logo.png" alt="TopScoreSnap" class="brand-mark">
+      <span class="brand-name">TopScoreSnap</span>
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html">الرئيسية</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="admin-wrap">
+    <h1 class="admin-title">لوحة تحكم البيانات</h1>
+    <p class="admin-sub">أضف حسابات، عدّل السكور، وأعد الترتيب — النظام يحسب تلقائيًا مين طلع ومين نزل بالترتيب، ثم صدّر الملفات وارفعها لموقعك.</p>
+
+    <div id="banner"></div>
+
+    <div class="admin-toolbar">
+      <button class="admin-btn primary" id="loadLiveBtn" type="button">تحميل بيانات الموقع الحالية</button>
+      <button class="admin-btn" id="uploadBtn" type="button">رفع ملف data.json</button>
+      <input type="file" id="fileInput" accept="application/json">
+      <button class="admin-btn" id="addRowBtn" type="button">+ إضافة حساب</button>
+      <button class="admin-btn" id="sortBtn" type="button">ترتيب تلقائي حسب السكور</button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th style="width:70px">الترتيب</th>
+            <th>اليوزر</th>
+            <th style="width:190px">السكور (المختصر — يظهر بالموقع)</th>
+            <th style="width:60px"></th>
+            <th style="width:36px"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-toolbar">
+      <button class="admin-btn primary" id="downloadBtn" type="button">تحميل data.json</button>
+      <button class="admin-btn" id="copyBtn" type="button">نسخ محتوى data.json</button>
+      <button class="admin-btn" id="previewBtn" type="button">عرض / إخفاء الكود</button>
+    </div>
+    <pre class="admin-json-preview" id="jsonPreview"></pre>
+
+    <h2 class="admin-section-title">السكور الكامل (اختياري)</h2>
+    <p class="admin-section-desc">يظهر بس بصفحة البروفايل لكل يوزر. سيبه فاضي لأي حد ما عندك رقمه الدقيق.</p>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>اليوزر</th><th>السكور الكامل والدقيق</th></tr></thead>
+        <tbody id="fullTbody"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-toolbar">
+      <button class="admin-btn primary" id="downloadFullBtn" type="button">تحميل scores-full.json</button>
+      <button class="admin-btn" id="copyFullBtn" type="button">نسخ محتوى scores-full.json</button>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+/* ============================================================
+   ACCESS GATE — client-side passcode check.
+   IMPORTANT: this deters casual visitors only. It is NOT real
+   security (see the note shown in the setup screen). Anyone who
+   views the page source and is determined enough could bypass it.
+   For real privacy, don't publish this file at all — see README.
+   ============================================================ */
+(() => {
+  "use strict";
+
+  // Paste your generated hash here to lock the panel permanently.
+  // Leave empty to run first-time setup.
+  const PASSCODE_HASH = "";
+
+  const SESSION_KEY = "tss_admin_unlocked";
+
+  async function sha256(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function unlock() {
+    sessionStorage.setItem(SESSION_KEY, "1");
+    document.getElementById("gateOverlay").style.display = "none";
+    document.getElementById("appRoot").style.display = "block";
+  }
+
+  function renderSetup() {
+    const box = document.getElementById("gateBox");
+    box.innerHTML = `
+      <img src="logo.png" alt="">
+      <p class="gate-title">أول إعداد للوحة التحكم</p>
+      <p class="gate-desc">ما فيه رمز محفوظ بعد. اختر رمز مرور الحين، وبنولّد لك كود تحطه بالملف عشان يصير قفل دائم.</p>
+      <input type="password" id="p1" placeholder="رمز المرور">
+      <input type="password" id="p2" placeholder="أكد رمز المرور">
+      <div class="gate-error" id="gateErr"></div>
+      <button type="button" class="admin-btn primary" id="setupBtn" style="width:100%">إنشاء الرمز</button>
+      <div id="hashArea"></div>
+    `;
+    document.getElementById("setupBtn").addEventListener("click", async () => {
+      const p1 = document.getElementById("p1").value;
+      const p2 = document.getElementById("p2").value;
+      const err = document.getElementById("gateErr");
+      if (p1.length < 6) { err.textContent = "خله 6 خانات على الأقل."; return; }
+      if (p1 !== p2) { err.textContent = "الرمزين ما تطابقوا."; return; }
+      err.textContent = "";
+      const hash = await sha256(p1);
+      document.getElementById("hashArea").innerHTML = `
+        <div class="gate-hash-box">${hash}</div>
+        <div class="gate-note">
+          انسخ الكود اللي فوق، وبالملف دوّر على <b>PASSCODE_HASH = ""</b> واستبدلها بـ<br>
+          <b>PASSCODE_HASH = "${hash}"</b><br>
+          ثم احفظ الملف وارفعه من جديد — بعدها الرمز يصير مطلوب كل مرة.<br><br>
+          هذا الجلسة الحالية فُتحت مؤقتًا عشان تكمل شغلك الحين، بس إذا سكرت المتصفح بدون ما تحفظ الكود بالملف، أي حد يفتح الرابط بيشوف نفس شاشة الإعداد من جديد.
+        </div>
+      `;
+      unlock();
+    });
+  }
+
+  function renderLogin() {
+    const box = document.getElementById("gateBox");
+    box.innerHTML = `
+      <img src="logo.png" alt="">
+      <p class="gate-title">لوحة تحكم خاصة</p>
+      <p class="gate-desc">هذي الصفحة مقفلة برمز مرور.</p>
+      <input type="password" id="passInput" placeholder="رمز المرور">
+      <div class="gate-error" id="gateErr"></div>
+      <button type="button" class="admin-btn primary" id="loginBtn" style="width:100%">دخول</button>
+    `;
+    const submit = async () => {
+      const val = document.getElementById("passInput").value;
+      const hash = await sha256(val);
+      if (hash === PASSCODE_HASH) {
+        unlock();
+      } else {
+        document.getElementById("gateErr").textContent = "رمز خاطئ.";
+        document.getElementById("passInput").value = "";
+      }
+    };
+    document.getElementById("loginBtn").addEventListener("click", submit);
+    document.getElementById("passInput").addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+  }
+
+  if (sessionStorage.getItem(SESSION_KEY) === "1") {
+    unlock();
+  } else if (!PASSCODE_HASH) {
+    renderSetup();
+  } else {
+    renderLogin();
+  }
+})();
+</script>
+
+<script>
+(() => {
+  "use strict";
+
+  let rows = [];          // {username, score}
+  let fullScores = {};    // username -> full score string
+  let baseline = {};      // lowercased username -> previous rank
+  let baselineMeta = { siteLaunch: "2026" };
+
+  function parseScore(str) {
+    if (!str) return 0;
+    let s = String(str).trim().toUpperCase().replace(/,/g, "").replace(/\+$/, "");
+    let mult = 1;
+    const last = s.slice(-1);
+    if (last === "B") { mult = 1e9; s = s.slice(0, -1); }
+    else if (last === "M") { mult = 1e6; s = s.slice(0, -1); }
+    else if (last === "K") { mult = 1e3; s = s.slice(0, -1); }
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n * mult;
+  }
+
+  function formatNumber(n) {
+    return n.toLocaleString("en-US");
+  }
+
+  function showBanner(msg, isError) {
+    document.getElementById("banner").innerHTML = msg
+      ? `<div class="admin-banner${isError ? " error" : ""}">${msg}</div>` : "";
+  }
+
+  function setBaselineFromData(data) {
+    baseline = {};
+    (data.accounts || []).forEach(a => { baseline[a.username.toLowerCase()] = a.rank; });
+    baselineMeta.siteLaunch = (data.meta && data.meta.siteLaunch) || "2026";
+    rows = (data.accounts || []).map(a => ({ username: a.username, score: a.score }));
+  }
+
+  async function loadLive() {
+    try {
+      const res = await fetch("data.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("not ok");
+      const data = await res.json();
+      setBaselineFromData(data);
+      await loadFullLive();
+      renderRows();
+      renderFullRows();
+      showBanner(`تم تحميل ${rows.length} حساب من data.json الحالي على الموقع.`, false);
+    } catch (err) {
+      showBanner("ما قدرت أجيب data.json تلقائيًا (طبيعي إذا فتحت الملف من جهازك مباشرة بدون سيرفر). استخدم زر «رفع ملف data.json» بدالها.", true);
+    }
+  }
+
+  async function loadFullLive() {
+    try {
+      const res = await fetch("scores-full.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("not ok");
+      const data = await res.json();
+      fullScores = (data && data.fullScores) || {};
+    } catch (err) {
+      fullScores = {};
+    }
+  }
+
+  function handleFileUpload(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        setBaselineFromData(data);
+        renderRows();
+        renderFullRows();
+        showBanner(`تم تحميل ${rows.length} حساب من الملف المرفوع.`, false);
+      } catch (err) {
+        showBanner("الملف اللي رفعته مو JSON صالح.", true);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function deltaHTML(username, rank) {
+    const prev = baseline[username.trim().toLowerCase()];
+    if (!username.trim()) return "";
+    if (prev === undefined) return `<span class="admin-delta new">جديد</span>`;
+    const diff = prev - rank;
+    if (diff > 0) return `<span class="admin-delta up">▲${diff}</span>`;
+    if (diff < 0) return `<span class="admin-delta down">▼${Math.abs(diff)}</span>`;
+    return `<span class="admin-delta">—</span>`;
+  }
+
+  function validate() {
+    const seen = new Map();
+    let hasError = false;
+    rows.forEach((r, i) => {
+      const key = r.username.trim().toLowerCase();
+      if (!key) { hasError = true; return; }
+      if (seen.has(key)) hasError = true;
+      seen.set(key, i);
+    });
+    return !hasError;
+  }
+
+  function renderRows() {
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+    rows.forEach((row, i) => {
+      const rank = i + 1;
+      const tr = document.createElement("tr");
+      const dupe = rows.filter(r => r.username.trim().toLowerCase() === row.username.trim().toLowerCase() && row.username.trim() !== "").length > 1;
+      tr.innerHTML = `
+        <td class="admin-rank-cell">#${rank}${deltaHTML(row.username, rank)}</td>
+        <td><input type="text" class="uname ${(!row.username.trim() || dupe) ? "invalid" : ""}" data-i="${i}" value="${escapeAttr(row.username)}" placeholder="username"></td>
+        <td>
+          <input type="text" class="score" data-i="${i}" value="${escapeAttr(row.score)}" placeholder="مثال: 462.2M">
+          <div class="admin-parsed">≈ ${formatNumber(parseScore(row.score))}</div>
+        </td>
+        <td>
+          <div class="admin-move-btns">
+            <button type="button" class="admin-icon-btn up-btn" data-i="${i}" title="تحريك لأعلى">▲</button>
+            <button type="button" class="admin-icon-btn down-btn" data-i="${i}" title="تحريك لأسفل">▼</button>
+          </div>
+        </td>
+        <td><button type="button" class="admin-icon-btn admin-del-btn del-btn" data-i="${i}" title="حذف">✕</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll(".uname").forEach(el => el.addEventListener("input", e => {
+      rows[+e.target.dataset.i].username = e.target.value;
+      renderRows(); renderFullRows(); syncPreview();
+    }));
+    tbody.querySelectorAll(".score").forEach(el => el.addEventListener("input", e => {
+      rows[+e.target.dataset.i].score = e.target.value;
+      renderRows(); syncPreview();
+    }));
+    tbody.querySelectorAll(".up-btn").forEach(el => el.addEventListener("click", e => {
+      const i = +e.target.dataset.i;
+      if (i > 0) { [rows[i - 1], rows[i]] = [rows[i], rows[i - 1]]; renderRows(); syncPreview(); }
+    }));
+    tbody.querySelectorAll(".down-btn").forEach(el => el.addEventListener("click", e => {
+      const i = +e.target.dataset.i;
+      if (i < rows.length - 1) { [rows[i + 1], rows[i]] = [rows[i], rows[i + 1]]; renderRows(); syncPreview(); }
+    }));
+    tbody.querySelectorAll(".del-btn").forEach(el => el.addEventListener("click", e => {
+      const i = +e.target.dataset.i;
+      rows.splice(i, 1);
+      renderRows(); renderFullRows(); syncPreview();
+    }));
+
+    document.getElementById("downloadBtn").disabled = !validate();
+    document.getElementById("copyBtn").disabled = !validate();
+  }
+
+  function renderFullRows() {
+    const tbody = document.getElementById("fullTbody");
+    tbody.innerHTML = "";
+    rows.forEach(row => {
+      if (!row.username.trim()) return;
+      const tr = document.createElement("tr");
+      const val = fullScores[row.username] || "";
+      tr.innerHTML = `
+        <td>${escapeHtml(row.username)}</td>
+        <td><input type="text" class="fullscore" data-u="${escapeAttr(row.username)}" value="${escapeAttr(val)}" placeholder="مثال: 1,111,140,867"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll(".fullscore").forEach(el => el.addEventListener("input", e => {
+      fullScores[e.target.dataset.u] = e.target.value;
+    }));
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  function escapeAttr(str) { return escapeHtml(str).replace(/"/g, "&quot;"); }
+
+  function buildDataJSON() {
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const accounts = rows.filter(r => r.username.trim()).map((r, i) => ({
+      rank: i + 1,
+      username: r.username.trim(),
+      score: r.score.trim(),
+      prevRank: baseline[r.username.trim().toLowerCase()] ?? null
+    }));
+    return JSON.stringify({ meta: { lastUpdate: ym, siteLaunch: baselineMeta.siteLaunch }, accounts }, null, 2);
+  }
+
+  function buildFullJSON() {
+    const out = {};
+    rows.filter(r => r.username.trim()).forEach(r => { out[r.username.trim()] = (fullScores[r.username.trim()] || "").trim(); });
+    return JSON.stringify({ fullScores: out }, null, 2);
+  }
+
+  function download(filename, text) {
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = "data:application/json;charset=utf-8," + encodeURIComponent(text);
+    link.click();
+  }
+
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = "تم النسخ!";
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }).catch(() => {});
+  }
+
+  function syncPreview() {
+    const pre = document.getElementById("jsonPreview");
+    if (pre.classList.contains("shown")) pre.textContent = buildDataJSON();
+  }
+
+  document.getElementById("loadLiveBtn").addEventListener("click", loadLive);
+  document.getElementById("uploadBtn").addEventListener("click", () => document.getElementById("fileInput").click());
+  document.getElementById("fileInput").addEventListener("change", e => {
+    if (e.target.files[0]) handleFileUpload(e.target.files[0]);
+  });
+  document.getElementById("addRowBtn").addEventListener("click", () => {
+    rows.push({ username: "", score: "" });
+    renderRows(); syncPreview();
+  });
+  document.getElementById("sortBtn").addEventListener("click", () => {
+    rows = rows.map((r, i) => ({ r, i })).sort((x, y) => parseScore(y.r.score) - parseScore(x.r.score) || x.i - y.i).map(o => o.r);
+    renderRows(); syncPreview();
+  });
+  document.getElementById("downloadBtn").addEventListener("click", () => { if (validate()) download("data.json", buildDataJSON()); });
+  document.getElementById("copyBtn").addEventListener("click", e => { if (validate()) copyText(buildDataJSON(), e.currentTarget); });
+  document.getElementById("previewBtn").addEventListener("click", () => {
+    const pre = document.getElementById("jsonPreview");
+    pre.classList.toggle("shown");
+    if (pre.classList.contains("shown")) pre.textContent = buildDataJSON();
+  });
+  document.getElementById("downloadFullBtn").addEventListener("click", () => download("scores-full.json", buildFullJSON()));
+  document.getElementById("copyFullBtn").addEventListener("click", e => copyText(buildFullJSON(), e.currentTarget));
+
+  // start empty; user loads live data or uploads a file
+  renderRows();
+  renderFullRows();
+})();
+</script>
+</body>
+</html>
