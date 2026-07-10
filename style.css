@@ -21,8 +21,6 @@
   --gold:   #e3b768;
   --silver: #cbd6e2;
   --bronze: #cf8a63;
-  --up:     #7bc99a;
-  --down:   #e0806a;
 
   --text:       #eaf3fb;
   --text-dim:   #90a1ba;
@@ -406,7 +404,7 @@ html[dir="rtl"] .board-table thead th { text-transform: none; letter-spacing: 0;
 .board-table tbody tr:hover { background: rgba(159,214,242,.05); }
 .board-table tbody tr:last-child td { border-bottom: none; }
 
-.col-rank { width: 68px; }
+.col-rank { width: 52px; }
 .col-score { width: 108px; text-align: end; }
 .row-score { text-align: end; }
 .rank-num {
@@ -415,17 +413,6 @@ html[dir="rtl"] .board-table thead th { text-transform: none; letter-spacing: 0;
   font-size: .88rem;
   font-variant-numeric: tabular-nums;
 }
-.rank-delta {
-  display: inline-block;
-  font-size: .62rem;
-  font-weight: 800;
-  margin-inline-start: 4px;
-  vertical-align: middle;
-}
-.rank-delta.up { color: var(--up); }
-.rank-delta.down { color: var(--down); }
-.rank-delta.new { color: var(--gold); text-transform: uppercase; letter-spacing: .03em; }
-[dir="rtl"] .rank-delta.new { text-transform: none; letter-spacing: 0; }
 .row-username {
   font-weight: 600;
   color: var(--ice-100);
@@ -439,11 +426,10 @@ html[dir="rtl"] .board-table thead th { text-transform: none; letter-spacing: 0;
 }
 
 @media (max-width: 480px) {
-  .col-rank { width: 52px; }
+  .col-rank { width: 38px; }
   .col-score { width: 88px; }
   .board-table thead th, .board-table td { padding: 10px 8px; font-size: .82rem; }
   .row-score { font-size: .85rem; }
-  .rank-delta { display: block; margin-inline-start: 0; font-size: .58rem; }
 }
 
 .empty-state {
