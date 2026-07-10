@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopScoreSnap — قارن بين حسابين</title>
+<meta name="description" content="قارن بين أي حسابين على قائمة TopScoreSnap من حيث النقاط والترتيب.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="logo.png" alt="TopScoreSnap" class="brand-mark">
+      <span class="brand-name">TopScoreSnap</span>
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+      <a href="faq.html" data-i18n="nav.faq">الأسئلة الشائعة</a>
+    </nav>
+    <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">
+      <span class="lang-toggle-dot" aria-hidden="true"></span>
+      <span id="langToggleLabel">EN</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="compare-section">
+    <div class="wrap compare-wrap">
+      <p class="eyebrow compare-eyebrow" data-i18n="compare.eyebrow">أداة المقارنة</p>
+      <h1 class="compare-title" data-i18n="compare.title">قارن بين حسابين</h1>
+      <div id="compareBody">
+        <div class="cert-loading">
+          <div class="cert-loading-ring"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="logo.png" alt="" class="brand-mark small">
+      <span class="brand-name">TopScoreSnap</span>
+    </div>
+    <p class="footer-tagline" data-i18n="footer.tagline">تتبع أعلى نقاط سناب شات، ببساطة.</p>
+    <p class="footer-rights">© <span id="year"></span> TopScoreSnap · <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
+  </div>
+</footer>
+
+<script src="certificate.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  const CSTR = {
+    ar: {
+      "nav.home": "الرئيسية",
+      "nav.faq": "الأسئلة الشائعة",
+      "footer.tagline": "تتبع أعلى نقاط سناب شات، ببساطة.",
+      "footer.rights": "جميع الحقوق محفوظة",
+      "compare.eyebrow": "أداة المقارنة",
+      "compare.title": "قارن بين حسابين",
+      "compare.pickA": "الحساب الأول",
+      "compare.pickB": "الحساب الثاني",
+      "compare.go": "قارن",
+      "compare.choose": "اختر يوزر...",
+      "compare.vs": "ضد",
+      "compare.rank": "الترتيب",
+      "compare.score": "النقاط",
+      "compare.leads": "متصدر بفارق تقريبي",
+      "compare.tie": "الحسابين متقاربين جدًا بنفس المستوى تقريبًا",
+      "compare.viewProfile": "عرض الملف الكامل",
+      "compare.copyLink": "نسخ رابط المقارنة",
+      "compare.copied": "تم النسخ",
+      "compare.newCompare": "قارن حسابين ثانيين",
+      "compare.notFound": "أحد اليوزرين ما لقيناه بالقائمة الحالية.",
+      "compare.sameUser": "اختر يوزرين مختلفين للمقارنة.",
+      "club.billion": "نادي المليار",
+      "club.elite": "نادي 250 مليون+",
+      "club.verified": "نادي 100 مليون+",
+      "toggleLabel": "EN"
+    },
+    en: {
+      "nav.home": "Home",
+      "nav.faq": "FAQ",
+      "footer.tagline": "Tracking the highest Snapchat scores, made simple.",
+      "footer.rights": "All rights reserved",
+      "compare.eyebrow": "Comparison Tool",
+      "compare.title": "Compare Two Accounts",
+      "compare.pickA": "First Account",
+      "compare.pickB": "Second Account",
+      "compare.go": "Compare",
+      "compare.choose": "Choose a username...",
+      "compare.vs": "VS",
+      "compare.rank": "Rank",
+      "compare.score": "Score",
+      "compare.leads": "Leads by approximately",
+      "compare.tie": "Both accounts are very close, roughly the same level.",
+      "compare.viewProfile": "View Full Profile",
+      "compare.copyLink": "Copy Comparison Link",
+      "compare.copied": "Copied",
+      "compare.newCompare": "Compare Different Accounts",
+      "compare.notFound": "One of these usernames wasn't found on the current list.",
+      "compare.sameUser": "Pick two different usernames to compare.",
+      "club.billion": "Billion Club",
+      "club.elite": "250M+ Club",
+      "club.verified": "100M+ Club",
+      "toggleLabel": "عربي"
+    }
+  };
+
+  const LANG_KEY = "tss_lang";
+  let lang = localStorage.getItem(LANG_KEY) || "ar";
+  let accountsCache = null;
+
+  function t(key) { return CSTR[lang][key] || key; }
+
+  function applyStaticLanguage() {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (CSTR[lang][key]) el.textContent = CSTR[lang][key];
+    });
+    document.getElementById("langToggleLabel").textContent = CSTR[lang].toggleLabel;
+    window.TSS_LANG = lang;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderPicker(accounts, notice) {
+    const options = accounts.map(a => `<option value="${escapeHtml(a.username)}">${escapeHtml(a.username)} — ${escapeHtml(a.score)}</option>`).join("");
+    document.getElementById("compareBody").innerHTML = `
+      ${notice ? `<div class="verify-status verify-status-warn" style="padding:16px 0 26px;"><p class="verify-desc">${notice}</p></div>` : ""}
+      <div class="compare-picker facet">
+        <div class="compare-picker-field">
+          <label>${t("compare.pickA")}</label>
+          <select id="pickA"><option value="">${t("compare.choose")}</option>${options}</select>
+        </div>
+        <div class="compare-picker-vs">${t("compare.vs")}</div>
+        <div class="compare-picker-field">
+          <label>${t("compare.pickB")}</label>
+          <select id="pickB"><option value="">${t("compare.choose")}</option>${options}</select>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary facet compare-go-btn" id="goBtn">${t("compare.go")}</button>
+    `;
+
+    document.getElementById("goBtn").addEventListener("click", () => {
+      const a = document.getElementById("pickA").value;
+      const b = document.getElementById("pickB").value;
+      if (!a || !b) return;
+      if (a.toLowerCase() === b.toLowerCase()) {
+        renderPicker(accounts, t("compare.sameUser"));
+        return;
+      }
+      location.href = `compare.html?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`;
+    });
+  }
+
+  function sideHTML(account, side) {
+    const cd = window.TSSCertificate.buildCertData(account.username, { accounts: accountsCache });
+    const club = window.TSSCertificate.clubOf(account.score);
+    return `
+      <div class="compare-side compare-side-${side}">
+        <div class="cert-seal tier-${cd.tier} compare-seal"><span>#${cd.rank}</span></div>
+        <p class="compare-username">${escapeHtml(account.username)}</p>
+        <p class="compare-score">${escapeHtml(account.score)}</p>
+        <div class="club-badge club-${club} compare-club">${t("club." + club)}</div>
+        <p class="compare-meta">${t("compare.rank")}: #${cd.rank}</p>
+        <a href="profile.html?u=${encodeURIComponent(account.username)}" class="btn btn-ghost facet compare-profile-btn">${t("compare.viewProfile")}</a>
+      </div>`;
+  }
+
+  function formatApprox(n) {
+    if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+    return String(Math.round(n));
+  }
+
+  function renderComparison(a, b) {
+    const scoreA = window.TSSCertificate.parseScore(a.score);
+    const scoreB = window.TSSCertificate.parseScore(b.score);
+    const max = Math.max(scoreA, scoreB) || 1;
+    const pctA = Math.max(6, Math.round((scoreA / max) * 100));
+    const pctB = Math.max(6, Math.round((scoreB / max) * 100));
+    const diff = Math.abs(scoreA - scoreB);
+    const leader = scoreA === scoreB ? null : (scoreA > scoreB ? a : b);
+    const diffLabel = diff > 0 ? formatApprox(diff) : "";
+
+    document.getElementById("compareBody").innerHTML = `
+      <div class="compare-grid">
+        ${sideHTML(a, "a")}
+        <div class="compare-vs-badge">${t("compare.vs")}</div>
+        ${sideHTML(b, "b")}
+      </div>
+
+      <div class="compare-bars">
+        <div class="compare-bar-row">
+          <span class="compare-bar-label">${escapeHtml(a.username)}</span>
+          <div class="compare-bar-track"><div class="compare-bar-fill fill-a" style="width:${pctA}%"></div></div>
+        </div>
+        <div class="compare-bar-row">
+          <span class="compare-bar-label">${escapeHtml(b.username)}</span>
+          <div class="compare-bar-track"><div class="compare-bar-fill fill-b" style="width:${pctB}%"></div></div>
+        </div>
+      </div>
+
+      <p class="compare-result">
+        ${leader ? `<b>${escapeHtml(leader.username)}</b> ${t("compare.leads")} <b>${diffLabel}</b>` : t("compare.tie")}
+      </p>
+
+      <div class="compare-actions">
+        <button type="button" class="btn btn-ghost facet" id="copyCompareBtn">${t("compare.copyLink")}</button>
+        <a href="compare.html" class="btn btn-ghost facet">${t("compare.newCompare")}</a>
+      </div>
+    `;
+
+    document.getElementById("copyCompareBtn").addEventListener("click", e => {
+      navigator.clipboard.writeText(location.href).then(() => {
+        const btn = e.currentTarget;
+        const original = btn.textContent;
+        btn.textContent = t("compare.copied");
+        setTimeout(() => { btn.textContent = original; }, 1600);
+      }).catch(() => {});
+    });
+  }
+
+  async function load() {
+    let data;
+    try {
+      const res = await fetch("data.json", { cache: "no-store" });
+      data = await res.json();
+    } catch (err) {
+      data = { accounts: [] };
+    }
+    accountsCache = data.accounts || [];
+
+    const params = new URLSearchParams(location.search);
+    const uA = params.get("a");
+    const uB = params.get("b");
+
+    if (!uA || !uB) {
+      renderPicker(accountsCache);
+      return;
+    }
+
+    const a = accountsCache.find(x => x.username.toLowerCase() === uA.toLowerCase());
+    const b = accountsCache.find(x => x.username.toLowerCase() === uB.toLowerCase());
+    if (!a || !b) {
+      renderPicker(accountsCache, t("compare.notFound"));
+      return;
+    }
+    renderComparison(a, b);
+  }
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+  applyStaticLanguage();
+  load();
+
+  document.getElementById("langToggle").addEventListener("click", () => {
+    lang = lang === "ar" ? "en" : "ar";
+    localStorage.setItem(LANG_KEY, lang);
+    applyStaticLanguage();
+    load();
+  });
+})();
+</script>
+</body>
+</html>
