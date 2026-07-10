@@ -167,6 +167,16 @@
     });
   }
 
+  function rankDeltaHTML(entry) {
+    if (entry.prevRank === undefined || entry.prevRank === null) {
+      return `<span class="rank-delta new">${currentLang === "ar" ? "جديد" : "NEW"}</span>`;
+    }
+    const diff = entry.prevRank - entry.rank;
+    if (diff > 0) return `<span class="rank-delta up">▲${diff}</span>`;
+    if (diff < 0) return `<span class="rank-delta down">▼${Math.abs(diff)}</span>`;
+    return "";
+  }
+
   function renderTable(list) {
     const body = document.getElementById("boardBody");
     const emptyState = document.getElementById("emptyState");
@@ -189,7 +199,7 @@
       tr.setAttribute("role", "link");
       tr.setAttribute("data-username", entry.username);
       tr.innerHTML = `
-        <td class="col-rank"><span class="rank-num">#${entry.rank}</span></td>
+        <td class="col-rank"><span class="rank-num">#${entry.rank}</span>${rankDeltaHTML(entry)}</td>
         <td class="col-user row-username">${escapeHtml(entry.username)}</td>
         <td class="col-score row-score">
           <span>${escapeHtml(entry.score)}</span>
