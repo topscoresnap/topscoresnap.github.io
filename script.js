@@ -168,9 +168,7 @@
   }
 
   function rankDeltaHTML(entry) {
-    if (entry.prevRank === undefined || entry.prevRank === null) {
-      return `<span class="rank-delta new">${currentLang === "ar" ? "جديد" : "NEW"}</span>`;
-    }
+    if (entry.prevRank === undefined || entry.prevRank === null) return "";
     const diff = entry.prevRank - entry.rank;
     if (diff > 0) return `<span class="rank-delta up">▲${diff}</span>`;
     if (diff < 0) return `<span class="rank-delta down">▼${Math.abs(diff)}</span>`;
