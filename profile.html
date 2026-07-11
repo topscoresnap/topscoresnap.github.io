@@ -3,14 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TopScoreSnap — الملف الشخصي</title>
-<meta name="description" content="الملف الموثّق للاعب على TopScoreSnap — النقاط، الترتيب، وشهادة الإنجاز.">
-<meta name="robots" content="noindex">
+<title>TopScoreSnap — أعلى نقاط سناب شات وأعلى سكور سناب حول العالم | Highest Snapchat Scores</title>
+<meta name="description" content="تصفح قائمة أعلى نقاط سناب شات (Snap Score) حول العالم — أعلى 10 حسابات سكور سناب، الترتيب العالمي، وشهادات موثّقة لكل حساب. تحديث دوري، بدون تسجيل دخول.">
+<meta name="keywords" content="اعلى نقاط سناب شات, اعلى سكور سناب, اعلى 10 حسابات سكور سناب, ترتيب سناب سكور, highest snapchat score, top snap score, snapchat score leaderboard, top 10 snap score accounts">
+<link rel="canonical" href="https://topscoresnap.github.io/">
 <link rel="icon" href="logo.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TopScoreSnap">
+<meta property="og:title" content="TopScoreSnap — أعلى نقاط سناب شات حول العالم">
+<meta property="og:description" content="تصفح قائمة أعلى نقاط Snap Score حول العالم، الترتيب العالمي، وشهادات موثّقة لكل حساب.">
+<meta property="og:image" content="https://topscoresnap.github.io/logo.png">
+<meta property="og:url" content="https://topscoresnap.github.io/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TopScoreSnap — أعلى نقاط سناب شات حول العالم">
+<meta name="twitter:description" content="تصفح قائمة أعلى نقاط Snap Score حول العالم، الترتيب العالمي، وشهادات موثّقة لكل حساب.">
+<meta name="twitter:image" content="https://topscoresnap.github.io/logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "TopScoreSnap",
+  "url": "https://topscoresnap.github.io/",
+  "description": "لوحة عرض مستقلة لأعلى نقاط Snap Score حول العالم."
+}
+</script>
 </head>
 <body>
 
@@ -18,13 +40,20 @@
 
 <header class="site-header">
   <div class="wrap header-inner">
-    <a href="index.html" class="brand">
+    <a href="#top" class="brand">
       <img src="logo.png" alt="TopScoreSnap" class="brand-mark">
       <span class="brand-name">TopScoreSnap</span>
     </a>
+
     <nav class="main-nav" aria-label="Main">
-      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+      <a href="#top" data-i18n="nav.home">الرئيسية</a>
+      <a href="#leaderboard" data-i18n="nav.leaderboard">المتصدرين</a>
+      <a href="compare.html" data-i18n="nav.compare">قارن</a>
+      <a href="faq.html" data-i18n="nav.faq">الأسئلة الشائعة</a>
+      <a href="#about" data-i18n="nav.about">عن الموقع</a>
+      <a href="#contact" data-i18n="nav.contact">تواصل</a>
     </nav>
+
     <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">
       <span class="lang-toggle-dot" aria-hidden="true"></span>
       <span id="langToggleLabel">EN</span>
@@ -32,15 +61,145 @@
   </div>
 </header>
 
-<main>
-  <section class="profile-section">
-    <div class="wrap profile-wrap" id="profileWrap">
-      <div class="cert-loading">
-        <div class="cert-loading-ring"></div>
-        <p class="cert-loading-text" data-i18n="profile.loading">جارٍ التحميل...</p>
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">قائمة حصرية · 100 مليون نقطة فأكثر</p>
+        <h1 class="hero-title">
+          <span data-i18n="hero.title1">أعلى الحسابات</span>
+          <span class="hero-title-accent" data-i18n="hero.title2">من حيث نقاط سناب</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">نجمع لك في مكان واحد أبرز حسابات Snapchat حول العالم التي تجاوزت نقاطها 100 مليون نقطة، ونرتبها بوضوح لتشوف بسهولة مين يتصدّر السباق عالميًا.</p>
+        <div class="hero-ctas">
+          <a href="#leaderboard" class="btn btn-primary facet">
+            <span data-i18n="hero.ctaPrimary">شوف المتصدرين</span>
+          </a>
+          <a href="#about" class="btn btn-ghost facet">
+            <span data-i18n="hero.ctaSecondary">عن الموقع</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-art-glow"></div>
+        <img src="logo.png" alt="" class="hero-ghost">
+      </div>
+    </div>
+
+    <div class="wrap stats-strip">
+      <div class="stat facet">
+        <span class="stat-value" id="statRanked">—</span>
+        <span class="stat-label" data-i18n="stats.ranked">حساب مُصنّف</span>
+      </div>
+      <div class="stat facet">
+        <span class="stat-value" id="statHighest">—</span>
+        <span class="stat-label" data-i18n="stats.highest">أعلى نقاط</span>
+      </div>
+      <div class="stat facet">
+        <span class="stat-value" id="statUpdated">—</span>
+        <span class="stat-label" data-i18n="stats.updated">آخر تحديث</span>
       </div>
     </div>
   </section>
+
+  <!-- LEADERBOARD -->
+  <section class="leaderboard" id="leaderboard">
+    <div class="wrap">
+
+      <h2 class="podium-title" data-i18n="podium.title">أعلى 3 حسابات</h2>
+
+      <div class="podium" id="podium">
+        <!-- injected by script.js -->
+      </div>
+
+      <div class="board-panel facet">
+
+        <div class="board-controls">
+          <h3 class="board-title" data-i18n="board.title">كل الحسابات</h3>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.65 13.39l5.23 5.23a1 1 0 0 0 1.42-1.42l-5.23-5.23A7.5 7.5 0 0 0 10.5 3Zm-5.5 7.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z"/></svg>
+            <input type="search" id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="ابحث عن يوزر...">
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="board-table">
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th class="col-user" data-i18n="table.username">اليوزر</th>
+                <th class="col-score" data-i18n="table.score">النقاط</th>
+              </tr>
+            </thead>
+            <tbody id="boardBody">
+              <!-- injected by script.js -->
+            </tbody>
+          </table>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <img src="logo.png" alt="" class="empty-ghost">
+            <p class="empty-title" data-i18n="empty.title">لا توجد نتائج مطابقة</p>
+            <p class="empty-subtitle" data-i18n="empty.subtitle">جرّب كلمة بحث ثانية.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <a href="compare.html" class="compare-cta">
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M9 3 4 8h3v10h4V8h3L9 3Zm6 13 5-5h-3V1h-4v10H9l5 5Z"/></svg>
+        <span data-i18n="leaderboard.compareCta">قارن بين حسابين</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="wrap about-inner">
+      <p class="eyebrow" data-i18n="about.eyebrow">عن الموقع</p>
+      <h2 class="about-title" data-i18n="about.title">ما هو TopScoreSnap؟</h2>
+      <p class="about-p" data-i18n="about.p1">TopScoreSnap لوحة عرض مستقلة تُعنى برصد أعلى حسابات Snapchat حول العالم من حيث نقاط Snap Score، وتُبنى القائمة حصرًا من الحسابات التي بلغت نقاطها مئة مليون نقطة فأكثر. الهدف أن يجد الزائر في مكانٍ واحد صورة واضحة عمّن يتصدّر هذا الترتيب عالميًا، دون الحاجة للبحث في مصادر متفرقة.</p>
+      <p class="about-p" data-i18n="about.p2">تُحدَّث الأرقام يدويًا وبشكل دوري اعتمادًا على ما هو متاح من مصادر عامة، ويستطيع أي زائر تصفح القائمة كاملة أو البحث عن يوزر معيّن في أي وقت.</p>
+
+      <div class="points-block">
+        <h3 class="points-title" data-i18n="about.pointsTitle">كيف تزداد نقاط Snap Score؟</h3>
+        <p class="about-p" data-i18n="about.pointsIntro">لا يكشف Snapchat رسميًا عن معادلة احتساب النقاط بدقة، لكن من المعروف أنها ترتفع كلما زاد تفاعلك اليومي داخل التطبيق، وأبرز ما يرفعها:</p>
+        <ul class="points-list">
+          <li class="facet"><span data-i18n="about.pointsItem1">إرسال السنابات (صور ومقاطع فيديو) لأصدقائك بشكل يومي</span></li>
+          <li class="facet"><span data-i18n="about.pointsItem2">فتح ومشاهدة السنابات التي تصلك من الآخرين</span></li>
+          <li class="facet"><span data-i18n="about.pointsItem3">نشر القصص (الستوري) بانتظام</span></li>
+        </ul>
+        <p class="about-p" data-i18n="about.pointsOutro">كل نشاط بسيط يُحتسب، وكلما داومت على استخدام التطبيق يوميًا كلما تراكمت نقطتك أكثر مع الوقت.</p>
+      </div>
+
+      <div class="disclaimer facet">
+        <p class="disclaimer-title" data-i18n="about.disclaimerTitle">تنويه مهم</p>
+        <p class="disclaimer-text" data-i18n="about.disclaimer">هذا الموقع مستقل وغير رسمي، وما له أي ارتباط أو علاقة برعاية أو تأييد من شركة Snap Inc. أو تطبيق Snapchat. اسم "Snapchat" وشعاراته ملك لأصحابها، ونستخدمها هنا فقط للإشارة إلى الخدمة التي تُقاس نقاطها.</p>
+      </div>
+
+      <div class="disclaimer facet">
+        <p class="disclaimer-title" data-i18n="about.activeTitle">ملاحظة حول الحسابات المدرجة</p>
+        <p class="disclaimer-text" data-i18n="about.activeText">جميع الحسابات المدرجة في هذه القائمة فعّالة وقت آخر تحديث، ولا تشمل القائمة أي حساب تم حظره أو إيقافه من قِبل Snapchat. كما أن القائمة لا تمثّل جميع حسابات Snapchat عالميًا، بل تقتصر على الحسابات الفعّالة التي توفّرت بياناتها لدينا.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-inner facet">
+      <p class="eyebrow" data-i18n="contact.eyebrow">تواصل معنا</p>
+      <h2 class="contact-title" data-i18n="contact.title">تواصل معنا</h2>
+      <p class="contact-text" data-i18n="contact.text">إذا كنت تملك نقاطًا تقارب 100 مليون نقطة أو أكثر، أو تعرف شخصًا يملك ذلك، لا تتردد في التواصل معنا لإضافتك ضمن القائمة.</p>
+      <a href="https://www.tiktok.com/@topscoresnap?_r=1&_t=ZS-97qScSjjjfB" target="_blank" rel="noopener" class="btn btn-primary facet tiktok-btn">
+        <svg viewBox="0 0 24 24" class="tiktok-icon" aria-hidden="true"><path d="M16.6 5.82c-.88-.96-1.36-2.2-1.36-3.5h-3.15v13.6c0 1.6-1.3 2.9-2.9 2.9a2.9 2.9 0 0 1-2.9-2.9 2.9 2.9 0 0 1 2.9-2.9c.28 0 .55.04.8.11V9.9a6.1 6.1 0 0 0-.8-.05A6.13 6.13 0 0 0 3.1 16a6.13 6.13 0 0 0 6.13 6.13A6.13 6.13 0 0 0 15.36 16V8.62a8.2 8.2 0 0 0 4.8 1.54V6.98a4.85 4.85 0 0 1-3.56-1.16Z"/></svg>
+        <span data-i18n="contact.tiktok">تابعنا على TikTok</span>
+      </a>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -49,233 +208,18 @@
       <img src="logo.png" alt="" class="brand-mark small">
       <span class="brand-name">TopScoreSnap</span>
     </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="#leaderboard" data-i18n="nav.leaderboard">المتصدرين</a>
+      <a href="compare.html" data-i18n="nav.compare">قارن</a>
+      <a href="faq.html" data-i18n="nav.faq">الأسئلة الشائعة</a>
+      <a href="#about" data-i18n="nav.about">عن الموقع</a>
+      <a href="#contact" data-i18n="nav.contact">تواصل</a>
+    </nav>
     <p class="footer-tagline" data-i18n="footer.tagline">تتبع أعلى نقاط سناب شات، ببساطة.</p>
     <p class="footer-rights">© <span id="year"></span> TopScoreSnap · <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="certificate.js"></script>
-<script>
-(() => {
-  "use strict";
-
-  const PSTR = {
-    ar: {
-      "nav.home": "الرئيسية",
-      "footer.tagline": "تتبع أعلى نقاط سناب شات، ببساطة.",
-      "footer.rights": "جميع الحقوق محفوظة",
-      "profile.loading": "جارٍ التحميل...",
-      "profile.eyebrow": "ملف لاعب موثّق",
-      "profile.subtitle": "من أعلى حسابات Snap Score عالميًا",
-      "profile.fullScoreLabel": "Snap Score الكامل",
-      "profile.publicScoreNote": "المعروض على لوحة الصدارة العامة",
-      "profile.rank": "الترتيب العالمي",
-      "profile.percentile": "من أفضل",
-      "profile.percentileLabel": "النسبة المئوية",
-      "profile.id": "رقم الشهادة",
-      "profile.verified": "تاريخ التوثيق",
-      "profile.showImage": "إظهار صورة الشهادة",
-      "profile.hideImage": "إخفاء الصورة",
-      "profile.share": "مشاركة",
-      "profile.download": "تحميل الصورة",
-      "profile.notFoundTitle": "لم يتم العثور على هذا الحساب",
-      "profile.notFoundDesc": "تأكد من الرابط، أو ارجع للوحة المتصدرين وابحث عن اليوزر من هناك.",
-      "profile.invalidTitle": "رابط غير صالح",
-      "profile.invalidDesc": "افتح هذه الصفحة من رابط أو زر داخل الموقع.",
-      "profile.backHome": "الرجوع للوحة المتصدرين",
-      "club.billion": "نادي المليار",
-      "club.elite": "نادي 250 مليون+",
-      "club.verified": "نادي 100 مليون+",
-      "toggleLabel": "EN"
-    },
-    en: {
-      "nav.home": "Home",
-      "footer.tagline": "Tracking the highest Snapchat scores, made simple.",
-      "footer.rights": "All rights reserved",
-      "profile.loading": "Loading...",
-      "profile.eyebrow": "Verified Player Profile",
-      "profile.subtitle": "Top-Ranked Global Snap Score Account",
-      "profile.fullScoreLabel": "Full Snap Score",
-      "profile.publicScoreNote": "Shown on the public leaderboard as",
-      "profile.rank": "Global Rank",
-      "profile.percentile": "Top",
-      "profile.percentileLabel": "Percentile",
-      "profile.id": "Certificate ID",
-      "profile.verified": "Verified On",
-      "profile.showImage": "Show Certificate Image",
-      "profile.hideImage": "Hide Image",
-      "profile.share": "Share",
-      "profile.download": "Download Image",
-      "profile.notFoundTitle": "Account Not Found",
-      "profile.notFoundDesc": "Check the link, or go back to the leaderboard and search for the username there.",
-      "profile.invalidTitle": "Invalid Link",
-      "profile.invalidDesc": "Please open this page from a link or button inside the site.",
-      "profile.backHome": "Back to Leaderboard",
-      "club.billion": "Billion Club",
-      "club.elite": "250M+ Club",
-      "club.verified": "100M+ Club",
-      "toggleLabel": "عربي"
-    }
-  };
-
-  const LANG_KEY = "tss_lang";
-  let lang = localStorage.getItem(LANG_KEY) || "ar";
-  let cd = null;
-  let cardEl = null;
-
-  function t(key) { return PSTR[lang][key] || key; }
-
-  function applyStaticLanguage() {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-      const key = el.getAttribute("data-i18n");
-      if (PSTR[lang][key]) el.textContent = PSTR[lang][key];
-    });
-    document.getElementById("langToggleLabel").textContent = PSTR[lang].toggleLabel;
-    window.TSS_LANG = lang;
-  }
-
-  function formatDate(d) {
-    const monthsAr = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-    const monthsEn = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const names = lang === "ar" ? monthsAr : monthsEn;
-    return `${d.getDate()} ${names[d.getMonth()]} ${d.getFullYear()}`;
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  function renderMessage(title, desc) {
-    document.getElementById("profileWrap").innerHTML = `
-      <div class="verify-status verify-status-neutral">
-        <h1 class="verify-title">${title}</h1>
-        <p class="verify-desc">${desc}</p>
-        <a href="index.html" class="btn btn-ghost facet verify-home-btn" style="margin-top:20px;display:inline-block;width:auto;">${t("profile.backHome")}</a>
-      </div>`;
-  }
-
-  function renderProfile(account, fullScore) {
-    const hasFull = fullScore && String(fullScore).trim().length > 0;
-    const club = window.TSSCertificate.clubOf(account.score);
-    document.getElementById("profileWrap").innerHTML = `
-      <div class="profile-hero">
-        <div class="cert-verified-pill profile-pill"><span>✓</span></div>
-        <p class="eyebrow" data-i18n="profile.eyebrow">${t("profile.eyebrow")}</p>
-        <div class="cert-seal tier-${cd.tier} profile-seal"><span>#${cd.rank}</span></div>
-        <h1 class="profile-username">${escapeHtml(account.username)}</h1>
-        <p class="profile-subtitle">${t("profile.subtitle")}</p>
-        <div class="club-badge club-${club}">
-          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M6 3h12v2h2a1 1 0 0 1 1 1c0 3-2 5-4.5 5.4A5.5 5.5 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.5 5.5 0 0 1 7.5 11.4C5 11 3 9 3 6a1 1 0 0 1 1-1h2V3Zm0 4H5c.3 1.4 1.3 2.4 2.6 2.8A6 6 0 0 1 6 7Zm12 0a6 6 0 0 1-1.6 2.8C17.7 9.4 18.7 8.4 19 7h-1Z"/></svg>
-          <span>${t("club." + club)}</span>
-        </div>
-
-        <div class="profile-score-block">
-          <span class="cert-score-value profile-score-value">${escapeHtml(hasFull ? fullScore : account.score)}</span>
-          <span class="cert-score-label">${t("profile.fullScoreLabel")}</span>
-          ${hasFull ? `<span class="profile-public-note">${t("profile.publicScoreNote")}: ${escapeHtml(account.score)}</span>` : ""}
-        </div>
-      </div>
-
-      <div class="verify-detail facet">
-        <div class="verify-detail-row"><span>${t("profile.rank")}</span><b>#${cd.rank}</b></div>
-        <div class="verify-detail-row"><span>${t("profile.percentileLabel")}</span><b>${t("profile.percentile")} ${cd.topPercent}%</b></div>
-        <div class="verify-detail-row"><span>${t("profile.id")}</span><b>${cd.certId}</b></div>
-        <div class="verify-detail-row"><span>${t("profile.verified")}</span><b>${formatDate(cd.date)}</b></div>
-      </div>
-
-      <div class="profile-actions">
-        <button type="button" class="btn btn-ghost facet" id="showImgBtn">${t("profile.showImage")}</button>
-        <button type="button" class="btn btn-ghost facet" id="shareBtn">${t("profile.share")}</button>
-        <button type="button" class="btn btn-primary facet" id="downloadBtn">${t("profile.download")}</button>
-      </div>
-
-      <div class="profile-card-container" id="cardContainer"></div>
-    `;
-
-    const showBtn = document.getElementById("showImgBtn");
-    const shareBtn = document.getElementById("shareBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const container = document.getElementById("cardContainer");
-
-    function ensureCard() {
-      if (!cardEl) cardEl = window.TSSCertificate.mount(container, cd, lang);
-      return cardEl;
-    }
-
-    function setBusy(btn, busy) {
-      btn.disabled = busy;
-      if (busy) { btn.dataset.label = btn.textContent; btn.textContent = "..."; }
-      else if (btn.dataset.label) { btn.textContent = btn.dataset.label; }
-    }
-
-    showBtn.addEventListener("click", () => {
-      ensureCard();
-      const expanded = container.classList.toggle("expanded");
-      showBtn.textContent = expanded ? t("profile.hideImage") : t("profile.showImage");
-    });
-
-    downloadBtn.addEventListener("click", async () => {
-      const el = ensureCard();
-      setBusy(downloadBtn, true);
-      await window.TSSCertificate.downloadFromCard(cd, el, () => setBusy(downloadBtn, false));
-    });
-
-    shareBtn.addEventListener("click", async () => {
-      const el = ensureCard();
-      setBusy(shareBtn, true);
-      await window.TSSCertificate.shareFromCard(cd, el, () => setBusy(shareBtn, false));
-    });
-  }
-
-  async function load() {
-    const params = new URLSearchParams(location.search);
-    const username = params.get("u");
-    if (!username) {
-      renderMessage(t("profile.invalidTitle"), t("profile.invalidDesc"));
-      return;
-    }
-
-    let data, fullData;
-    try {
-      const [r1, r2] = await Promise.all([
-        fetch("data.json", { cache: "no-store" }),
-        fetch("scores-full.json", { cache: "no-store" }).catch(() => null)
-      ]);
-      data = await r1.json();
-      fullData = r2 ? await r2.json().catch(() => ({ fullScores: {} })) : { fullScores: {} };
-    } catch (err) {
-      renderMessage(t("profile.notFoundTitle"), t("profile.notFoundDesc"));
-      return;
-    }
-
-    const account = (data.accounts || []).find(a => a.username.toLowerCase() === username.toLowerCase());
-    if (!account) {
-      renderMessage(t("profile.notFoundTitle"), t("profile.notFoundDesc"));
-      return;
-    }
-
-    cd = window.TSSCertificate.buildCertData(username, data);
-    cardEl = null;
-    const fullScore = (fullData.fullScores || {})[account.username];
-    renderProfile(account, fullScore);
-  }
-
-  document.getElementById("year").textContent = new Date().getFullYear();
-  applyStaticLanguage();
-  load();
-
-  document.getElementById("langToggle").addEventListener("click", () => {
-    lang = lang === "ar" ? "en" : "ar";
-    localStorage.setItem(LANG_KEY, lang);
-    applyStaticLanguage();
-    if (cd) load();
-  });
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
