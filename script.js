@@ -274,8 +274,28 @@
     window.TSS_DATA = boardData;
     window.dispatchEvent(new CustomEvent("tss:data-ready", { detail: boardData }));
 
+    injectItemListSchema(boardData.accounts || []);
     renderStats();
     renderBoard();
+  }
+
+  function injectItemListSchema(accounts) {
+    if (!accounts.length) return;
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "أعلى نقاط سناب شات — TopScoreSnap",
+      "itemListElement": accounts.slice(0, 10).map(a => ({
+        "@type": "ListItem",
+        "position": a.rank,
+        "name": a.username,
+        "description": `Snap Score: ${a.score}`
+      }))
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
   }
 
   document.addEventListener("DOMContentLoaded", init);
