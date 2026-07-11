@@ -37,6 +37,12 @@
     <div class="wrap compare-wrap">
       <p class="eyebrow compare-eyebrow" data-i18n="compare.eyebrow">أداة المقارنة</p>
       <h1 class="compare-title" data-i18n="compare.title">قارن بين حسابين</h1>
+
+      <div class="compare-mode-tabs" id="modeTabs">
+        <button type="button" class="compare-mode-btn active" data-mode="list" id="modeListBtn">قارن بين حسابين بالقائمة</button>
+        <button type="button" class="compare-mode-btn" data-mode="self" id="modeSelfBtn">قارن حسابك أنت</button>
+      </div>
+
       <div id="compareBody">
         <div class="cert-loading">
           <div class="cert-loading-ring"></div>
@@ -52,6 +58,11 @@
       <img src="logo.png" alt="" class="brand-mark small">
       <span class="brand-name">TopScoreSnap</span>
     </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
+      <a href="compare.html" data-i18n="nav.compare">قارن</a>
+      <a href="faq.html" data-i18n="nav.faq">الأسئلة الشائعة</a>
+    </nav>
     <p class="footer-tagline" data-i18n="footer.tagline">تتبع أعلى نقاط سناب شات، ببساطة.</p>
     <p class="footer-rights">© <span id="year"></span> TopScoreSnap · <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
   </div>
@@ -85,6 +96,16 @@
       "compare.newCompare": "قارن حسابين ثانيين",
       "compare.notFound": "أحد اليوزرين ما لقيناه بالقائمة الحالية.",
       "compare.sameUser": "اختر يوزرين مختلفين للمقارنة.",
+      "compare.modeList": "قارن بين حسابين بالقائمة",
+      "compare.modeSelf": "قارن حسابك أنت",
+      "compare.pickVs": "اختر حساب من القائمة",
+      "compare.yourAccount": "حسابك",
+      "compare.yourUsername": "اسم اليوزر",
+      "compare.yourScore": "نقاطك",
+      "compare.yourPlaceholder": "اكتب يوزرك",
+      "compare.scorePlaceholder": "مثال: 50M",
+      "compare.notRanked": "غير مدرج بالقائمة",
+      "compare.fillBoth": "عبّي اسمك ونقاطك عشان تقدر تقارن.",
       "club.billion": "نادي المليار",
       "club.elite": "نادي 250 مليون+",
       "club.verified": "نادي 100 مليون+",
@@ -112,6 +133,16 @@
       "compare.newCompare": "Compare Different Accounts",
       "compare.notFound": "One of these usernames wasn't found on the current list.",
       "compare.sameUser": "Pick two different usernames to compare.",
+      "compare.modeList": "Compare Two Listed Accounts",
+      "compare.modeSelf": "Compare Your Own Account",
+      "compare.pickVs": "Pick an account from the list",
+      "compare.yourAccount": "Your Account",
+      "compare.yourUsername": "Username",
+      "compare.yourScore": "Your Score",
+      "compare.yourPlaceholder": "Type your username",
+      "compare.scorePlaceholder": "e.g. 50M",
+      "compare.notRanked": "Not on the list",
+      "compare.fillBoth": "Fill in your username and score to compare.",
       "club.billion": "Billion Club",
       "club.elite": "250M+ Club",
       "club.verified": "100M+ Club",
@@ -142,8 +173,49 @@
     return div.innerHTML;
   }
 
+  let currentMode = "list";
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById("modeListBtn").classList.toggle("active", mode === "list");
+    document.getElementById("modeSelfBtn").classList.toggle("active", mode === "self");
+    renderPicker(accountsCache);
+  }
+
   function renderPicker(accounts, notice) {
+    document.getElementById("modeTabs").style.display = "flex";
     const options = accounts.map(a => `<option value="${escapeHtml(a.username)}">${escapeHtml(a.username)} — ${escapeHtml(a.score)}</option>`).join("");
+
+    if (currentMode === "self") {
+      document.getElementById("compareBody").innerHTML = `
+        ${notice ? `<div class="verify-status verify-status-warn" style="padding:16px 0 26px;"><p class="verify-desc">${notice}</p></div>` : ""}
+        <div class="compare-picker facet">
+          <div class="compare-picker-field">
+            <label>${t("compare.pickVs")}</label>
+            <select id="pickA"><option value="">${t("compare.choose")}</option>${options}</select>
+          </div>
+          <div class="compare-picker-vs">${t("compare.vs")}</div>
+          <div class="compare-picker-field">
+            <label>${t("compare.yourAccount")}</label>
+            <input type="text" id="ownName" placeholder="${t("compare.yourPlaceholder")}">
+            <input type="text" id="ownScore" placeholder="${t("compare.scorePlaceholder")}" style="margin-top:8px;">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary facet compare-go-btn" id="goBtn">${t("compare.go")}</button>
+      `;
+      document.getElementById("goBtn").addEventListener("click", () => {
+        const a = document.getElementById("pickA").value;
+        const mu = document.getElementById("ownName").value.trim();
+        const ms = document.getElementById("ownScore").value.trim();
+        if (!a || !mu || !ms) {
+          renderPicker(accounts, t("compare.fillBoth"));
+          return;
+        }
+        location.href = `compare.html?a=${encodeURIComponent(a)}&me=1&mu=${encodeURIComponent(mu)}&ms=${encodeURIComponent(ms)}`;
+      });
+      return;
+    }
+
     document.getElementById("compareBody").innerHTML = `
       ${notice ? `<div class="verify-status verify-status-warn" style="padding:16px 0 26px;"><p class="verify-desc">${notice}</p></div>` : ""}
       <div class="compare-picker facet">
@@ -172,9 +244,19 @@
     });
   }
 
-  function sideHTML(account, side) {
-    const cd = window.TSSCertificate.buildCertData(account.username, { accounts: accountsCache });
+  function sideHTML(account, side, isSelf) {
     const club = window.TSSCertificate.clubOf(account.score);
+    if (isSelf) {
+      return `
+        <div class="compare-side compare-side-${side}">
+          <div class="cert-seal tier-ice compare-seal"><span>★</span></div>
+          <p class="compare-username">${escapeHtml(account.username)}</p>
+          <p class="compare-score">${escapeHtml(account.score)}</p>
+          <div class="club-badge club-${club} compare-club">${t("club." + club)}</div>
+          <p class="compare-meta">${t("compare.notRanked")}</p>
+        </div>`;
+    }
+    const cd = window.TSSCertificate.buildCertData(account.username, { accounts: accountsCache });
     return `
       <div class="compare-side compare-side-${side}">
         <div class="cert-seal tier-${cd.tier} compare-seal"><span>#${cd.rank}</span></div>
@@ -193,7 +275,8 @@
     return String(Math.round(n));
   }
 
-  function renderComparison(a, b) {
+  function renderComparison(a, b, selfSide) {
+    document.getElementById("modeTabs").style.display = "none";
     const scoreA = window.TSSCertificate.parseScore(a.score);
     const scoreB = window.TSSCertificate.parseScore(b.score);
     const max = Math.max(scoreA, scoreB) || 1;
@@ -205,9 +288,9 @@
 
     document.getElementById("compareBody").innerHTML = `
       <div class="compare-grid">
-        ${sideHTML(a, "a")}
+        ${sideHTML(a, "a", selfSide === "a")}
         <div class="compare-vs-badge">${t("compare.vs")}</div>
-        ${sideHTML(b, "b")}
+        ${sideHTML(b, "b", selfSide === "b")}
       </div>
 
       <div class="compare-bars">
@@ -254,6 +337,20 @@
     const params = new URLSearchParams(location.search);
     const uA = params.get("a");
     const uB = params.get("b");
+    const isMe = params.get("me") === "1";
+    const mu = params.get("mu");
+    const ms = params.get("ms");
+
+    if (isMe && uA && mu && ms) {
+      const a = accountsCache.find(x => x.username.toLowerCase() === uA.toLowerCase());
+      if (!a) {
+        currentMode = "self";
+        renderPicker(accountsCache, t("compare.notFound"));
+        return;
+      }
+      renderComparison(a, { username: mu, score: ms }, "b");
+      return;
+    }
 
     if (!uA || !uB) {
       renderPicker(accountsCache);
@@ -266,12 +363,15 @@
       renderPicker(accountsCache, t("compare.notFound"));
       return;
     }
-    renderComparison(a, b);
+    renderComparison(a, b, null);
   }
 
   document.getElementById("year").textContent = new Date().getFullYear();
   applyStaticLanguage();
   load();
+
+  document.getElementById("modeListBtn").addEventListener("click", () => setMode("list"));
+  document.getElementById("modeSelfBtn").addEventListener("click", () => setMode("self"));
 
   document.getElementById("langToggle").addEventListener("click", () => {
     lang = lang === "ar" ? "en" : "ar";
